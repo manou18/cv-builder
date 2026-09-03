@@ -152,6 +152,12 @@
     font-size:12px; font-weight:600; padding:4px 2px;
   }
   .dob-picker-clear:hover{text-decoration:underline;}
+  .dob-picker-footer{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:2px;}
+  .dob-picker-ok{
+    border:1px solid var(--accent); background:var(--accent); color:var(--accent-ink);
+    padding:6px 16px; border-radius:16px; font-size:12.5px; font-weight:600;
+  }
+  .dob-picker-ok:hover{opacity:.9;}
 
   .style-tabs{display:flex; gap:6px;}
   .style-tabs button{

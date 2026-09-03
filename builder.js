@@ -17,7 +17,7 @@ const state = {
   personal: {
     firstName:'Code', lastName:'Nomad', jobTitle:'Marketing Manager',
     email:'codenomad213@gmail.com', phone:'+1 514 555 0134',
-    phoneCountry:'ca', phoneNumber:'514 555 0134',
+    phoneCountry:'us', phoneNumber:'514 555 0134',
     city:'Ghazala, Algeria', linkedin:'linkedin.com/in/sarahaddad', website:'',
     dob:'', dobISO:'', nationality:'Algerian', permis:'', maritalStatus:''
   },
@@ -163,6 +163,7 @@ function updatePhoneComposite(){
 let dobPickerOpen = false;
 let dobViewYear = null;
 let dobViewMonth = null; // 0-11
+let dobPendingISO = null; // staged selection while the picker is open, applied on OK
 const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
 function parseDobISO(iso){
@@ -363,6 +364,7 @@ function buildDobField(){
         const base = parseDobISO(state.personal.dobISO) || new Date(new Date().getFullYear()-25, 0, 1);
         dobViewYear = base.getFullYear();
         dobViewMonth = base.getMonth();
+        dobPendingISO = state.personal.dobISO || null;
       }
       dobPickerOpen = !dobPickerOpen;
       render();
@@ -374,10 +376,23 @@ function buildDobField(){
     const panel = el('div',{id:'dobPickerPortal', class:'dob-picker-panel', onclick:(e)=>e.stopPropagation()});
     panel.appendChild(buildDobPickerHeader());
     panel.appendChild(buildDobPickerGrid());
-    const clearBtn = el('button',{type:'button', class:'dob-picker-clear', onclick:()=>{
-      state.personal.dob=''; state.personal.dobISO=''; dobPickerOpen=false; refreshPreviewLive(); render();
-    }}, 'Clear date');
-    panel.appendChild(clearBtn);
+
+    const footer = el('div',{class:'dob-picker-footer'});
+    footer.appendChild(el('button',{type:'button', class:'dob-picker-clear', onclick:()=>{
+      state.personal.dob=''; state.personal.dobISO=''; dobPendingISO=null; dobPickerOpen=false; refreshPreviewLive(); render();
+    }}, 'Clear date'));
+    footer.appendChild(el('button',{type:'button', class:'dob-picker-ok', onclick:()=>{
+      if(dobPendingISO){
+        const d = parseDobISO(dobPendingISO);
+        state.personal.dobISO = dobPendingISO;
+        state.personal.dob = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+      }
+      dobPickerOpen = false;
+      refreshPreviewLive();
+      render();
+    }}, 'OK'));
+    panel.appendChild(footer);
+
     document.body.appendChild(panel);
     positionCountryMorePanel(btn, panel);
   }
@@ -428,7 +443,7 @@ function buildDobPickerGrid(){
   if(startOffset < 0) startOffset = 6;
   const daysInMonth = new Date(dobViewYear, dobViewMonth+1, 0).getDate();
 
-  const selected = parseDobISO(state.personal.dobISO);
+  const selected = parseDobISO(dobPendingISO);
   const today = new Date();
 
   for(let i=0;i<startOffset;i++){
@@ -443,10 +458,7 @@ function buildDobPickerGrid(){
     };
     if(!isFuture){
       dayAttrs.onclick = ()=>{
-        state.personal.dobISO = `${dobViewYear}-${String(dobViewMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-        state.personal.dob = `${String(d).padStart(2,'0')}/${String(dobViewMonth+1).padStart(2,'0')}/${dobViewYear}`;
-        dobPickerOpen = false;
-        refreshPreviewLive();
+        dobPendingISO = `${dobViewYear}-${String(dobViewMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
         render();
       };
     }
