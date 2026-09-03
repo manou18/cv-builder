@@ -140,7 +140,7 @@
     background:var(--paper); font-size:12.5px; color:var(--ink);
   }
 
-  /* Custom year dropdown: striped beige/white rows for clear visual separation */
+  /* Google-style flat dropdown: plain rows, no stripes, light-gray hover, subtle selection tint */
   .dob-year-wrap, .dob-month-wrap{flex:1; min-width:0; position:relative;}
   .dob-year-btn, .dob-month-btn{
     width:100%; display:flex; align-items:center; justify-content:space-between; gap:6px;
@@ -150,22 +150,20 @@
   .dob-year-btn[aria-expanded="true"], .dob-month-btn[aria-expanded="true"]{border-color:var(--accent); background:var(--white);}
   .dob-year-caret{font-size:9px; color:var(--ink-soft); transform:translateY(1px);}
   .dob-year-panel{
-    background:var(--white); border:1px solid var(--line); border-radius:10px;
-    box-shadow:0 2px 6px rgba(34,31,27,.08), 0 16px 40px rgba(34,31,27,.16);
-    padding:4px; width:130px; z-index:70; overflow:hidden;
+    background:var(--white); border:1px solid var(--line); border-radius:8px;
+    box-shadow:0 1px 2px rgba(34,31,27,.08), 0 6px 16px rgba(34,31,27,.12);
+    padding:0; width:150px; z-index:70; overflow:hidden;
   }
   .dob-month-panel{width:150px;}
-  .dob-year-list{max-height:220px; overflow-y:auto; border-radius:7px;}
+  .dob-year-list{max-height:224px; overflow-y:auto;}
   .dob-year-item{
     all:unset; box-sizing:border-box; display:block; width:100%; text-align:center;
-    padding:7px 0; font-size:12.5px; color:var(--ink); cursor:pointer;
+    padding:9px 0; font-size:12.5px; color:var(--ink); cursor:pointer; background:var(--white);
   }
-  .dob-month-panel .dob-year-item{text-align:start; padding:7px 10px;}
-  /* Alternating stripes: beige (--panel) / white for a clear, professional scan pattern */
-  .dob-year-item:nth-child(odd){background:var(--white);}
-  .dob-year-item:nth-child(even){background:var(--panel);}
-  .dob-year-item:hover{background:var(--accent); color:var(--accent-ink);}
-  .dob-year-item.active{background:var(--ink); color:var(--accent-ink); font-weight:700;}
+  .dob-month-panel .dob-year-item{text-align:start; padding:9px 12px;}
+  /* Google-style: plain white rows, light-gray hover, soft accent tint for the selected value */
+  .dob-year-item:hover{background:var(--panel);}
+  .dob-year-item.active{background:rgba(46,89,89,.12); color:var(--accent); font-weight:700;}
 
   .dob-picker-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:3px;}
   .dob-dow{font-size:10.5px; color:var(--ink-soft); text-align:center; padding:4px 0 6px; font-weight:700; letter-spacing:.02em; border-bottom:1px solid var(--line); margin-bottom:2px;}
