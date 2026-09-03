@@ -17,8 +17,9 @@ const state = {
   personal: {
     firstName:'Code', lastName:'Nomad', jobTitle:'Marketing Manager',
     email:'codenomad213@gmail.com', phone:'+1 514 555 0134',
+    phoneCountry:'ca', phoneNumber:'514 555 0134',
     city:'Ghazala, Algeria', linkedin:'linkedin.com/in/sarahaddad', website:'',
-    dob:'', nationality:'Algerian', permis:'', maritalStatus:''
+    dob:'', dobISO:'', nationality:'Algerian', permis:'', maritalStatus:''
   },
   summary:'Proven results in digital marketing with 6 years of experience growing B2C brands. Strong skills in content strategy, team management, and data analysis.',
   experience:[
@@ -91,6 +92,86 @@ const COUNTRY_SEARCH_ALIASES = {
 
 let countryMoreOpen = false;
 let countryMoreQuery = '';
+
+/* ---------- Phone dial-code picker ---------- */
+// Converts an ISO-3166 alpha-2 code into its flag emoji via regional
+// indicator symbols (e.g. 'ca' -> 🇨🇦), so we don't have to hand-list flags.
+function isoToFlag(iso2){
+  return iso2.toUpperCase().replace(/./g, ch => String.fromCodePoint(127397 + ch.charCodeAt(0)));
+}
+
+// [iso2, country name, dial code] — sorted alphabetically by name for search.
+const DIAL_CODES = [
+  ['af','Afghanistan','+93'],['al','Albania','+355'],['dz','Algeria','+213'],['ad','Andorra','+376'],
+  ['ao','Angola','+244'],['ar','Argentina','+54'],['am','Armenia','+374'],['au','Australia','+61'],
+  ['at','Austria','+43'],['az','Azerbaijan','+994'],['bs','Bahamas','+1'],['bh','Bahrain','+973'],
+  ['bd','Bangladesh','+880'],['by','Belarus','+375'],['be','Belgium','+32'],['bz','Belize','+501'],
+  ['bj','Benin','+229'],['bt','Bhutan','+975'],['bo','Bolivia','+591'],['ba','Bosnia and Herzegovina','+387'],
+  ['bw','Botswana','+267'],['br','Brazil','+55'],['bn','Brunei','+673'],['bg','Bulgaria','+359'],
+  ['bf','Burkina Faso','+226'],['bi','Burundi','+257'],['kh','Cambodia','+855'],['cm','Cameroon','+237'],
+  ['ca','Canada','+1'],['cv','Cape Verde','+238'],['cf','Central African Republic','+236'],['td','Chad','+235'],
+  ['cl','Chile','+56'],['cn','China','+86'],['co','Colombia','+57'],['km','Comoros','+269'],
+  ['cd','Congo (DRC)','+243'],['cg','Congo (Republic)','+242'],['cr','Costa Rica','+506'],['hr','Croatia','+385'],
+  ['cu','Cuba','+53'],['cy','Cyprus','+357'],['cz','Czech Republic','+420'],['dk','Denmark','+45'],
+  ['dj','Djibouti','+253'],['do','Dominican Republic','+1'],['ec','Ecuador','+593'],['eg','Egypt','+20'],
+  ['sv','El Salvador','+503'],['gq','Equatorial Guinea','+240'],['er','Eritrea','+291'],['ee','Estonia','+372'],
+  ['sz','Eswatini','+268'],['et','Ethiopia','+251'],['fj','Fiji','+679'],['fi','Finland','+358'],
+  ['fr','France','+33'],['ga','Gabon','+241'],['gm','Gambia','+220'],['ge','Georgia','+995'],
+  ['de','Germany','+49'],['gh','Ghana','+233'],['gr','Greece','+30'],['gt','Guatemala','+502'],
+  ['gn','Guinea','+224'],['gw','Guinea-Bissau','+245'],['gy','Guyana','+592'],['ht','Haiti','+509'],
+  ['hn','Honduras','+504'],['hk','Hong Kong','+852'],['hu','Hungary','+36'],['is','Iceland','+354'],
+  ['in','India','+91'],['id','Indonesia','+62'],['ir','Iran','+98'],['iq','Iraq','+964'],
+  ['ie','Ireland','+353'],['il','Israel','+972'],['it','Italy','+39'],['ci','Ivory Coast','+225'],
+  ['jm','Jamaica','+1'],['jp','Japan','+81'],['jo','Jordan','+962'],['kz','Kazakhstan','+7'],
+  ['ke','Kenya','+254'],['kw','Kuwait','+965'],['kg','Kyrgyzstan','+996'],['la','Laos','+856'],
+  ['lv','Latvia','+371'],['lb','Lebanon','+961'],['ls','Lesotho','+266'],['lr','Liberia','+231'],
+  ['ly','Libya','+218'],['li','Liechtenstein','+423'],['lt','Lithuania','+370'],['lu','Luxembourg','+352'],
+  ['mg','Madagascar','+261'],['mw','Malawi','+265'],['my','Malaysia','+60'],['mv','Maldives','+960'],
+  ['ml','Mali','+223'],['mt','Malta','+356'],['mr','Mauritania','+222'],['mu','Mauritius','+230'],
+  ['mx','Mexico','+52'],['md','Moldova','+373'],['mc','Monaco','+377'],['mn','Mongolia','+976'],
+  ['me','Montenegro','+382'],['ma','Morocco','+212'],['mz','Mozambique','+258'],['mm','Myanmar','+95'],
+  ['na','Namibia','+264'],['np','Nepal','+977'],['nl','Netherlands','+31'],['nz','New Zealand','+64'],
+  ['ni','Nicaragua','+505'],['ne','Niger','+227'],['ng','Nigeria','+234'],['mk','North Macedonia','+389'],
+  ['no','Norway','+47'],['om','Oman','+968'],['pk','Pakistan','+92'],['ps','Palestine','+970'],
+  ['pa','Panama','+507'],['pg','Papua New Guinea','+675'],['py','Paraguay','+595'],['pe','Peru','+51'],
+  ['ph','Philippines','+63'],['pl','Poland','+48'],['pt','Portugal','+351'],['qa','Qatar','+974'],
+  ['ro','Romania','+40'],['ru','Russia','+7'],['rw','Rwanda','+250'],['sa','Saudi Arabia','+966'],
+  ['sn','Senegal','+221'],['rs','Serbia','+381'],['sl','Sierra Leone','+232'],['sg','Singapore','+65'],
+  ['sk','Slovakia','+421'],['si','Slovenia','+386'],['so','Somalia','+252'],['za','South Africa','+27'],
+  ['kr','South Korea','+82'],['ss','South Sudan','+211'],['es','Spain','+34'],['lk','Sri Lanka','+94'],
+  ['sd','Sudan','+249'],['se','Sweden','+46'],['ch','Switzerland','+41'],['sy','Syria','+963'],
+  ['tw','Taiwan','+886'],['tj','Tajikistan','+992'],['tz','Tanzania','+255'],['th','Thailand','+66'],
+  ['tg','Togo','+228'],['tt','Trinidad and Tobago','+1'],['tn','Tunisia','+216'],['tr','Turkey','+90'],
+  ['tm','Turkmenistan','+993'],['ug','Uganda','+256'],['ua','Ukraine','+380'],['ae','United Arab Emirates','+971'],
+  ['gb','United Kingdom','+44'],['us','United States','+1'],['uy','Uruguay','+598'],['uz','Uzbekistan','+998'],
+  ['ve','Venezuela','+58'],['vn','Vietnam','+84'],['ye','Yemen','+967'],['zm','Zambia','+260'],
+  ['zw','Zimbabwe','+263']
+].map(([iso2,name,dial])=>({iso2,name,dial}));
+
+let phoneCodeOpen = false;
+let phoneCodeQuery = '';
+
+// Recomposes state.personal.phone (the value every CV/letter template
+// reads) from the selected dial code + the typed national number.
+function updatePhoneComposite(){
+  const meta = DIAL_CODES.find(c=>c.iso2===state.personal.phoneCountry);
+  const code = meta ? meta.dial : '';
+  state.personal.phone = [code, state.personal.phoneNumber].filter(Boolean).join(' ').trim();
+}
+
+/* ---------- Date of birth calendar picker ---------- */
+let dobPickerOpen = false;
+let dobViewYear = null;
+let dobViewMonth = null; // 0-11
+const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+function parseDobISO(iso){
+  if(!iso) return null;
+  const parts = iso.split('-').map(Number);
+  const y=parts[0], m=parts[1], d=parts[2];
+  if(!y||!m||!d) return null;
+  return new Date(y, m-1, d);
+}
 
 /* ---------- International CV guide text, per country ---------- */
 const GUIDES = {
@@ -206,6 +287,174 @@ function buildSectionRail(){
     btn.appendChild(el('span',{class:'rail-label'}, s.label));
     rail.appendChild(btn);
   });
+}
+
+/* ---------- Phone field: dial-code picker + national number ---------- */
+function buildPhoneField(){
+  const wrap = el('div',{class:'field'});
+  wrap.appendChild(el('label',{}, 'Phone'));
+  const row = el('div',{class:'phone-row'});
+
+  const current = DIAL_CODES.find(c=>c.iso2===state.personal.phoneCountry) || DIAL_CODES.find(c=>c.iso2==='us');
+  const codeBtn = el('button',{
+    type:'button', class:'phone-code-btn',
+    'aria-expanded': phoneCodeOpen ? 'true' : 'false',
+    onclick:(e)=>{ e.stopPropagation(); phoneCodeOpen = !phoneCodeOpen; phoneCodeQuery=''; render(); }
+  }, [`${isoToFlag(current.iso2)} ${current.dial}`]);
+  row.appendChild(codeBtn);
+
+  const numInput = el('input',{type:'tel', placeholder:'514 555 0134'});
+  numInput.value = state.personal.phoneNumber || '';
+  numInput.addEventListener('input', e=>{
+    state.personal.phoneNumber = e.target.value;
+    updatePhoneComposite();
+    refreshPreviewLive();
+  });
+  row.appendChild(numInput);
+  wrap.appendChild(row);
+
+  if(phoneCodeOpen){
+    const panel = el('div',{id:'phoneCodePortal', class:'country-more-panel', onclick:(e)=>e.stopPropagation()});
+    const searchInput = el('input',{type:'text', placeholder:'Search country…', class:'country-more-search-input'});
+    searchInput.value = phoneCodeQuery;
+    panel.appendChild(searchInput);
+    const list = el('div',{class:'country-more-list'});
+    panel.appendChild(list);
+    searchInput.addEventListener('input', e=>{ phoneCodeQuery = e.target.value; renderPhoneCodeList(list); });
+    renderPhoneCodeList(list);
+    document.body.appendChild(panel);
+    positionCountryMorePanel(codeBtn, panel);
+    setTimeout(()=>{ searchInput.focus(); }, 0);
+  }
+
+  return wrap;
+}
+
+function renderPhoneCodeList(listEl){
+  listEl.innerHTML = '';
+  const q = phoneCodeQuery.trim().toLowerCase();
+  const filtered = DIAL_CODES.filter(c=>{
+    if(!q) return true;
+    return (c.name+' '+c.dial+' '+c.iso2).toLowerCase().includes(q);
+  });
+  if(filtered.length===0){
+    listEl.appendChild(el('div',{class:'country-more-empty'}, 'No matches'));
+    return;
+  }
+  filtered.forEach(c=>{
+    const item = el('button',{
+      class:'country-more-item' + (state.personal.phoneCountry===c.iso2?' active':''),
+      onclick:()=>{ state.personal.phoneCountry=c.iso2; phoneCodeOpen=false; updatePhoneComposite(); render(); }
+    }, [`${isoToFlag(c.iso2)}  ${c.name}  ·  ${c.dial}`]);
+    listEl.appendChild(item);
+  });
+}
+
+/* ---------- Date of birth field: calendar picker ---------- */
+function buildDobField(){
+  const wrap = el('div',{class:'field'});
+  wrap.appendChild(el('label',{}, 'Date of birth'));
+
+  const btn = el('button',{
+    type:'button', class:'dob-picker-btn' + (state.personal.dob ? '' : ' placeholder'),
+    onclick:(e)=>{
+      e.stopPropagation();
+      if(!dobPickerOpen){
+        const base = parseDobISO(state.personal.dobISO) || new Date(new Date().getFullYear()-25, 0, 1);
+        dobViewYear = base.getFullYear();
+        dobViewMonth = base.getMonth();
+      }
+      dobPickerOpen = !dobPickerOpen;
+      render();
+    }
+  }, [state.personal.dob || 'Select date…']);
+  wrap.appendChild(btn);
+
+  if(dobPickerOpen){
+    const panel = el('div',{id:'dobPickerPortal', class:'dob-picker-panel', onclick:(e)=>e.stopPropagation()});
+    panel.appendChild(buildDobPickerHeader());
+    panel.appendChild(buildDobPickerGrid());
+    const clearBtn = el('button',{type:'button', class:'dob-picker-clear', onclick:()=>{
+      state.personal.dob=''; state.personal.dobISO=''; dobPickerOpen=false; refreshPreviewLive(); render();
+    }}, 'Clear date');
+    panel.appendChild(clearBtn);
+    document.body.appendChild(panel);
+    positionCountryMorePanel(btn, panel);
+  }
+
+  return wrap;
+}
+
+function buildDobPickerHeader(){
+  const header = el('div',{class:'dob-picker-header'});
+  header.appendChild(el('button',{type:'button', class:'dob-nav-btn', onclick:()=>{
+    dobViewMonth--; if(dobViewMonth<0){ dobViewMonth=11; dobViewYear--; } render();
+  }}, '‹'));
+
+  const monthSelect = el('select',{class:'dob-select'});
+  MONTH_NAMES.forEach((m,i)=>{
+    const opt = el('option',{value:i}, m);
+    if(i===dobViewMonth) opt.setAttribute('selected','selected');
+    monthSelect.appendChild(opt);
+  });
+  monthSelect.addEventListener('change', e=>{ dobViewMonth = +e.target.value; render(); });
+  header.appendChild(monthSelect);
+
+  const yearSelect = el('select',{class:'dob-select'});
+  const nowYear = new Date().getFullYear();
+  for(let y=nowYear; y>=nowYear-100; y--){
+    const opt = el('option',{value:y}, String(y));
+    if(y===dobViewYear) opt.setAttribute('selected','selected');
+    yearSelect.appendChild(opt);
+  }
+  yearSelect.addEventListener('change', e=>{ dobViewYear = +e.target.value; render(); });
+  header.appendChild(yearSelect);
+
+  header.appendChild(el('button',{type:'button', class:'dob-nav-btn', onclick:()=>{
+    dobViewMonth++; if(dobViewMonth>11){ dobViewMonth=0; dobViewYear++; } render();
+  }}, '›'));
+
+  return header;
+}
+
+function buildDobPickerGrid(){
+  const grid = el('div',{class:'dob-picker-grid'});
+  ['Mo','Tu','We','Th','Fr','Sa','Su'].forEach(d=>{
+    grid.appendChild(el('div',{class:'dob-dow'}, d));
+  });
+
+  const firstOfMonth = new Date(dobViewYear, dobViewMonth, 1);
+  let startOffset = firstOfMonth.getDay() - 1; // JS: 0=Sun..6=Sat -> Monday-first offset
+  if(startOffset < 0) startOffset = 6;
+  const daysInMonth = new Date(dobViewYear, dobViewMonth+1, 0).getDate();
+
+  const selected = parseDobISO(state.personal.dobISO);
+  const today = new Date();
+
+  for(let i=0;i<startOffset;i++){
+    grid.appendChild(el('div',{class:'dob-day empty'}));
+  }
+  for(let d=1; d<=daysInMonth; d++){
+    const isSelected = !!selected && selected.getFullYear()===dobViewYear && selected.getMonth()===dobViewMonth && selected.getDate()===d;
+    const isFuture = new Date(dobViewYear,dobViewMonth,d) > today;
+    const dayAttrs = {
+      type:'button',
+      class:'dob-day' + (isSelected?' selected':'') + (isFuture?' disabled':'')
+    };
+    if(!isFuture){
+      dayAttrs.onclick = ()=>{
+        state.personal.dobISO = `${dobViewYear}-${String(dobViewMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        state.personal.dob = `${String(d).padStart(2,'0')}/${String(dobViewMonth+1).padStart(2,'0')}/${dobViewYear}`;
+        dobPickerOpen = false;
+        refreshPreviewLive();
+        render();
+      };
+    }
+    const dayBtn = el('button', dayAttrs, String(d));
+    if(isFuture) dayBtn.setAttribute('disabled','disabled');
+    grid.appendChild(dayBtn);
+  }
+  return grid;
 }
 
 function sectionCard(titleHtml){
@@ -332,7 +581,7 @@ function buildPersonalSection(){
 
   const r2 = el('div',{class:'row2'});
   r2.appendChild(field('Email', state.personal.email, v=>{state.personal.email=v; refreshPreviewLive();}));
-  r2.appendChild(field('Phone', state.personal.phone, v=>{state.personal.phone=v; refreshPreviewLive();}));
+  r2.appendChild(buildPhoneField());
   card.appendChild(r2);
 
   const r3 = el('div',{class:'row2'});
@@ -342,7 +591,7 @@ function buildPersonalSection(){
 
   if(usesPhoto){
     const r4 = el('div',{class:'row3'});
-    r4.appendChild(field('Date of birth', state.personal.dob, v=>{state.personal.dob=v; refreshPreviewLive();}, 'text', 'e.g. 14/03/1994'));
+    r4.appendChild(buildDobField());
     r4.appendChild(field('Nationality', state.personal.nationality, v=>{state.personal.nationality=v; refreshPreviewLive();}, 'text', 'e.g. Moroccan'));
     r4.appendChild(field('Driving licence', state.personal.permis, v=>{state.personal.permis=v; refreshPreviewLive();}, 'text', 'e.g. Category B'));
     card.appendChild(r4);
@@ -2831,6 +3080,12 @@ const RENDERERS = {
    MAIN RENDER
    ========================================================= */
 function render(){
+  // These two pickers are only rebuilt while the Personal section is active;
+  // clear any leftover portal so switching sections/tabs never strands one.
+  ['phoneCodePortal','dobPickerPortal'].forEach(id=>{
+    const stale = document.getElementById(id);
+    if(stale) stale.remove();
+  });
   buildTopControls();
   buildSectionRail();
   buildFormPanel();
@@ -3375,7 +3630,11 @@ function downloadWord(){
 }
 
 document.addEventListener('click', ()=>{
-  if(countryMoreOpen){ countryMoreOpen = false; render(); }
+  let changed = false;
+  if(countryMoreOpen){ countryMoreOpen = false; changed = true; }
+  if(phoneCodeOpen){ phoneCodeOpen = false; changed = true; }
+  if(dobPickerOpen){ dobPickerOpen = false; changed = true; }
+  if(changed) render();
 });
 
 render();

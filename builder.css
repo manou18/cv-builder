@@ -105,6 +105,54 @@
   .country-more-item.active{background:var(--ink); color:var(--accent-ink); font-weight:600;}
   .country-more-empty{padding:8px 10px; font-size:12.5px; color:var(--ink-soft); text-align:center;}
 
+  /* ---------- Phone: dial-code picker + national number ---------- */
+  .phone-row{display:flex; gap:6px;}
+  .phone-code-btn{
+    flex-shrink:0; border:1px solid var(--line); background:var(--white); color:var(--ink);
+    padding:8px 10px; border-radius:var(--radius); font-size:13.5px; white-space:nowrap;
+  }
+  .phone-code-btn:hover{border-color:var(--accent);}
+  .phone-row input{flex:1; min-width:0;}
+
+  /* ---------- Date of birth: calendar picker ---------- */
+  .dob-picker-btn{
+    width:100%; text-align:start; border:1px solid var(--line); background:var(--white); color:var(--ink);
+    padding:8px 10px; border-radius:var(--radius); font-size:13.5px;
+  }
+  .dob-picker-btn:hover{border-color:var(--accent);}
+  .dob-picker-btn.placeholder{color:var(--ink-soft);}
+
+  .dob-picker-panel{
+    background:var(--white); border:1px solid var(--line); border-radius:12px;
+    box-shadow:var(--shadow); padding:10px; width:270px; max-width:88vw;
+    z-index:60; display:flex; flex-direction:column; gap:8px;
+  }
+  .dob-picker-header{display:flex; align-items:center; gap:4px;}
+  .dob-nav-btn{
+    flex-shrink:0; width:26px; height:26px; border:1px solid var(--line); background:var(--white);
+    border-radius:8px; font-size:13px; color:var(--ink-soft); display:flex; align-items:center; justify-content:center;
+  }
+  .dob-nav-btn:hover{border-color:var(--accent); color:var(--accent);}
+  .dob-select{
+    flex:1; min-width:0; padding:5px 6px; border:1px solid var(--line); border-radius:8px;
+    background:var(--paper); font-size:12.5px; color:var(--ink);
+  }
+  .dob-picker-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:2px;}
+  .dob-dow{font-size:10.5px; color:var(--ink-soft); text-align:center; padding:4px 0; font-weight:600;}
+  .dob-day{
+    all:unset; box-sizing:border-box; text-align:center; padding:6px 0; border-radius:8px;
+    font-size:12.5px; color:var(--ink); cursor:pointer;
+  }
+  .dob-day:hover:not(.disabled):not(.empty){background:var(--panel);}
+  .dob-day.selected{background:var(--ink); color:var(--accent-ink); font-weight:600;}
+  .dob-day.disabled{color:var(--line); cursor:default;}
+  .dob-day.empty{cursor:default;}
+  .dob-picker-clear{
+    align-self:flex-start; border:none; background:transparent; color:var(--accent);
+    font-size:12px; font-weight:600; padding:4px 2px;
+  }
+  .dob-picker-clear:hover{text-decoration:underline;}
+
   .style-tabs{display:flex; gap:6px;}
   .style-tabs button{
     border:1px solid var(--line); background:var(--white); padding:6px 12px;
@@ -321,6 +369,7 @@
   @media (hover: none) and (pointer: coarse){
     .rail button{width:52px; height:52px;}
     .country-tabs button, .style-tabs button, .btn-print, .btn-word, .file-btn, .country-more-item{min-height:40px;}
+    .phone-code-btn, .dob-picker-btn, .dob-day{min-height:40px;}
     .swatch{width:30px; height:30px;}
   }
 
