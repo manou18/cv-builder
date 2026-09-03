@@ -413,6 +413,12 @@
     body *{visibility:hidden;}
     .paper, .paper *{visibility:visible;}
     html, body{background:#fff !important; margin:0 !important;}
+    /* visibility:hidden (above) only stops painting — hidden elements keep
+       their full layout height, so the tall sidebar/form-panel/topbar were
+       still reserving vertical space in the print document. That pushed the
+       total flow height past one A4 page and printed a blank second page.
+       Remove them from flow entirely so nothing but .paper contributes height. */
+    .topbar, .rail, .form-panel, .preview-toolbar{display:none !important;}
     /* #paperWrap carries an inline zoom transform for on-screen viewing; any
        transform on an ancestor creates a new positioning context, so without
        neutralizing it here .paper's absolute top:0/left:0 below resolves
@@ -420,8 +426,8 @@
        producing a shrunken, cropped PDF (sometimes unreadable in strict
        viewers). Reset the whole ancestor chain so .paper is the only
        positioning context left. */
-    #paperWrap{transform:none !important; position:static !important; width:auto !important; margin:0 !important;}
-    .preview-panel, .workspace, .app{overflow:visible !important; position:static !important; transform:none !important;}
+    #paperWrap{transform:none !important; position:static !important; width:auto !important; height:auto !important; margin:0 !important;}
+    .preview-panel, .workspace, .app{overflow:visible !important; position:static !important; transform:none !important; height:auto !important;}
     .paper{position:absolute; top:0; left:0; box-shadow:none; margin:0; width:210mm; min-height:297mm; transform:none !important;}
     @page{ size:A4; margin:0; }
   }
