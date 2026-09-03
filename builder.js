@@ -15,10 +15,10 @@ const state = {
   photoAdjust: { scale: 1, rotate: 0, x: 0, y: 0, grayscale: false },
   skillBankCategory: 'Marketing & Communications',
   personal: {
-    firstName:'Sara', lastName:'Haddad', jobTitle:'Marketing Manager',
-    email:'sara.haddad@email.com', phone:'+1 514 555 0134',
-    city:'Montreal, QC', linkedin:'linkedin.com/in/sarahaddad', website:'',
-    dob:'', nationality:'', permis:'', maritalStatus:''
+    firstName:'Code', lastName:'Nomad', jobTitle:'Marketing Manager',
+    email:'codenomad213@gmail.com', phone:'+1 514 555 0134',
+    city:'Ghazala, Algeria', linkedin:'linkedin.com/in/sarahaddad', website:'',
+    dob:'', nationality:'Algerian', permis:'', maritalStatus:''
   },
   summary:'Résultats concrets en marketing numérique avec 6 ans d\u2019expérience dans la croissance de marques B2C. Compétences avancées en stratégie de contenu, gestion d\u2019équipe et analyse de données.',
   experience:[
@@ -49,21 +49,21 @@ const THEMES = {
 };
 
 const COUNTRY_META = {
-  us:{label:'American', flag:'🇺🇸', styles:{classic:'Classic ATS', modern:'Modern Sidebar', minimal:'Minimalist', creative:'Creative', compact:'Compact Two-Col'}},
-  ca:{label:'Canadian', flag:'🇨🇦', styles:{classic:'Traditional', modern:'Modern Bilingual', minimal:'Minimalist', creative:'Creative', compact:'Compact Two-Col'}},
+  us:{label:'American', flag:'🇺🇸', styles:{classic:'Traditional CV', modern:'Modern CV', minimal:'Minimalist', creative:'Creative', compact:'Compact Two-Col'}},
+  ca:{label:'Canadian', flag:'🇨🇦', styles:{classic:'Traditional CV', modern:'Modern CV', minimal:'Minimalist', creative:'Creative', compact:'Compact Two-Col'}},
   uk:{label:'British', flag:'🇬🇧', styles:{classic:'Traditional CV', modern:'Modern CV', minimal:'Minimalist', creative:'Creative', compact:'Compact Two-Col'}},
   au:{label:'Australian', flag:'🇦🇺', styles:{classic:'Traditional CV', modern:'Modern CV', minimal:'Minimalist', creative:'Creative', compact:'Compact Two-Col'}},
-  fr:{label:'French', flag:'🇫🇷', styles:{classic:'Classic CV', modern:'Modern CV', minimal:'Minimalist', creative:'Creative', compact:'Compact Two-Col'}},
-  de:{label:'German', flag:'🇩🇪', styles:{classic:'Tabellarischer Lebenslauf', modern:'Modern Lebenslauf', minimal:'Minimalist', creative:'Creative', compact:'Compact Two-Col'}},
-  es:{label:'Spanish', flag:'🇪🇸', styles:{classic:'CV Clásico', modern:'CV Moderno', minimal:'Minimalist', creative:'Creative', compact:'Compact Two-Col'}},
+  fr:{label:'French', flag:'🇫🇷', styles:{classic:'Traditional CV', modern:'Modern CV', minimal:'Minimalist', creative:'Creative', compact:'Compact Two-Col'}},
+  de:{label:'German', flag:'🇩🇪', styles:{classic:'Traditional CV', modern:'Modern CV', minimal:'Minimalist', creative:'Creative', compact:'Compact Two-Col'}},
+  es:{label:'Spanish', flag:'🇪🇸', styles:{classic:'Traditional CV', modern:'Modern CV', minimal:'Minimalist', creative:'Creative', compact:'Compact Two-Col'}},
   nl:{label:'Dutch', flag:'🇳🇱', styles:{classic:'Traditional CV', modern:'Modern CV', minimal:'Minimalist', creative:'Creative', compact:'Compact Two-Col'}},
-  ar:{label:'Arabic', flag:'🇸🇦', styles:{classic:'السيرة الذاتية الكلاسيكية', modern:'سيرة ذاتية عصرية', minimal:'Minimalist', creative:'Creative', compact:'Compact Two-Col'}},
-  br:{label:'Brazilian', flag:'🇧🇷', styles:{classic:'Currículo Clássico', modern:'Currículo Moderno', minimal:'Minimalist', creative:'Creative', compact:'Compact Two-Col'}},
-  jp:{label:'Japanese', flag:'🇯🇵', styles:{classic:'履歴書 (Rirekisho)', modern:'職務経歴書', minimal:'Minimalist', creative:'Creative', compact:'Compact Two-Col'}},
-  se:{label:'Nordic (Swedish)', flag:'🇸🇪', styles:{classic:'Klassiskt CV', modern:'Modernt CV', minimal:'Minimalist', creative:'Creative', compact:'Compact Two-Col'}},
-  it:{label:'Italian (Europass)', flag:'🇮🇹', styles:{classic:'CV Europass', modern:'CV Moderno', minimal:'Minimalist', creative:'Creative', compact:'Compact Two-Col'}},
+  ar:{label:'Arabic', flag:'🇸🇦', styles:{classic:'Traditional CV', modern:'Modern CV', minimal:'Minimalist', creative:'Creative', compact:'Compact Two-Col'}},
+  br:{label:'Brazilian', flag:'🇧🇷', styles:{classic:'Traditional CV', modern:'Modern CV', minimal:'Minimalist', creative:'Creative', compact:'Compact Two-Col'}},
+  jp:{label:'Japanese', flag:'🇯🇵', styles:{classic:'Traditional CV (Rirekisho)', modern:'Modern CV', minimal:'Minimalist', creative:'Creative', compact:'Compact Two-Col'}},
+  se:{label:'Nordic (Swedish)', flag:'🇸🇪', styles:{classic:'Traditional CV', modern:'Modern CV', minimal:'Minimalist', creative:'Creative', compact:'Compact Two-Col'}},
+  it:{label:'Italian (Europass)', flag:'🇮🇹', styles:{classic:'Traditional CV (Europass)', modern:'Modern CV', minimal:'Minimalist', creative:'Creative', compact:'Compact Two-Col'}},
   in:{label:'Indian', flag:'🇮🇳', styles:{classic:'Traditional CV', modern:'Modern CV', minimal:'Minimalist', creative:'Creative', compact:'Compact Two-Col'}},
-  cn:{label:'Chinese', flag:'🇨🇳', styles:{classic:'传统简历', modern:'现代简历', minimal:'Minimalist', creative:'Creative', compact:'Compact Two-Col'}},
+  cn:{label:'Chinese', flag:'🇨🇳', styles:{classic:'Traditional CV', modern:'Modern CV', minimal:'Minimalist', creative:'Creative', compact:'Compact Two-Col'}},
 };
 
 /* ---------- Country tab bar: pinned tabs + "More" dropdown ---------- */
