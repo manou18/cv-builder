@@ -67,6 +67,15 @@ const COUNTRY_META = {
   cn:{label:'Chinese', flag:'🇨🇳', styles:{classic:'Traditional CV', modern:'Modern CV', minimal:'Minimalist', creative:'Creative', compact:'Compact Two-Col'}},
 };
 
+// Switch the active country tab, guaranteeing a valid style is set for it.
+// (state.style only ships pre-filled for us/ca/fr — every other country needs
+// its first render to pick a default, otherwise RENDERERS[country][undefined]
+// throws and silently breaks whatever handler triggered the switch/re-render.)
+function switchCountry(key){
+  state.country = key;
+  if(!state.style[key]) state.style[key] = Object.keys(COUNTRY_META[key].styles)[0];
+}
+
 /* ---------- Country tab bar: pinned tabs + "More" dropdown ---------- */
 const PINNED_COUNTRIES = ['us','uk','fr','ar'];
 
@@ -956,7 +965,7 @@ function buildCountryTabs(){
 
   PINNED_COUNTRIES.forEach(key=>{
     const meta = COUNTRY_META[key];
-    const btn = el('button',{class: state.country===key?'active':'', onclick:()=>{ state.country=key; countryMoreOpen=false; render(); }},
+    const btn = el('button',{class: state.country===key?'active':'', onclick:()=>{ switchCountry(key); countryMoreOpen=false; render(); }},
       [meta.flag+' '+meta.label]);
     ct.appendChild(btn);
   });
@@ -1027,7 +1036,7 @@ function renderCountryMoreList(listEl, restKeys){
     const meta = COUNTRY_META[key];
     const item = el('button',{
       class:'country-more-item' + (state.country===key?' active':''),
-      onclick:()=>{ state.country=key; countryMoreOpen=false; render(); }
+      onclick:()=>{ switchCountry(key); countryMoreOpen=false; render(); }
     }, [meta.flag+' '+meta.label]);
     listEl.appendChild(item);
   });
@@ -1106,7 +1115,7 @@ function refreshPreviewLive(){
   if(paperEl){
     paperEl.innerHTML = state.view === 'letter'
       ? renderCoverLetter(theme)
-      : RENDERERS[state.country][state.style[state.country]](theme);
+      : RENDERERS[state.country][state.style[state.country] || 'classic'](theme);
     paperEl.setAttribute('dir', 'ltr'); // CV text is always English regardless of country
   }
 }
@@ -3168,7 +3177,7 @@ function render(){
   const theme = THEMES[state.theme];
   const html = state.view === 'letter'
     ? renderCoverLetter(theme)
-    : RENDERERS[state.country][state.style[state.country]](theme);
+    : RENDERERS[state.country][state.style[state.country] || 'classic'](theme);
   document.getElementById('paper').innerHTML = html;
   document.getElementById('paper').setAttribute('dir', 'ltr'); // CV text is always English regardless of country
 }
