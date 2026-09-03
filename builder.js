@@ -20,7 +20,7 @@ const state = {
     city:'Ghazala, Algeria', linkedin:'linkedin.com/in/sarahaddad', website:'',
     dob:'', nationality:'Algerian', permis:'', maritalStatus:''
   },
-  summary:'Résultats concrets en marketing numérique avec 6 ans d\u2019expérience dans la croissance de marques B2C. Compétences avancées en stratégie de contenu, gestion d\u2019équipe et analyse de données.',
+  summary:'Proven results in digital marketing with 6 years of experience growing B2C brands. Strong skills in content strategy, team management, and data analysis.',
   experience:[
     {title:'Marketing Manager', company:'Nordik Studio', location:'Montreal, QC', start:'2022', end:'Present', current:true,
      bullets:['Led a team of 5 to grow organic traffic by 64% year over year','Managed a $400K annual budget across paid and organic channels','Launched 3 product campaigns that generated $1.2M in new revenue']},
