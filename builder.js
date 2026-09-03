@@ -221,7 +221,7 @@ function buildFormPanel(){
   if(state.view === 'letter'){
     const guideBox = el('div',{class:'guide-box'});
     guideBox.appendChild(el('div',{class:'guide-title'}, '✉️ Cover letter tips'));
-    guideBox.appendChild(el('div',{}, 'Keep it to one page: one paragraph on why this role/company, one on your strongest relevant achievement, one closing with a call to action. The salutation and sign-off adapt automatically to the country selected above.'));
+    guideBox.appendChild(el('div',{}, 'Keep it to one page: one paragraph on why this role/company, one on your strongest relevant achievement, one closing with a call to action. The salutation and sign-off are always in English.'));
     panel.appendChild(guideBox);
 
     switch(state.activeLetterSection){
@@ -324,30 +324,30 @@ function buildPersonalSection(){
   }
 
   const r1 = el('div',{class:'row2'});
-  r1.appendChild(field('First name', state.personal.firstName, v=>{state.personal.firstName=v; render();}));
-  r1.appendChild(field('Last name', state.personal.lastName, v=>{state.personal.lastName=v; render();}));
+  r1.appendChild(field('First name', state.personal.firstName, v=>{state.personal.firstName=v; refreshPreviewLive();}));
+  r1.appendChild(field('Last name', state.personal.lastName, v=>{state.personal.lastName=v; refreshPreviewLive();}));
   card.appendChild(r1);
 
-  card.appendChild(field('Job title', state.personal.jobTitle, v=>{state.personal.jobTitle=v; render();}));
+  card.appendChild(field('Job title', state.personal.jobTitle, v=>{state.personal.jobTitle=v; refreshPreviewLive();}));
 
   const r2 = el('div',{class:'row2'});
-  r2.appendChild(field('Email', state.personal.email, v=>{state.personal.email=v; render();}));
-  r2.appendChild(field('Phone', state.personal.phone, v=>{state.personal.phone=v; render();}));
+  r2.appendChild(field('Email', state.personal.email, v=>{state.personal.email=v; refreshPreviewLive();}));
+  r2.appendChild(field('Phone', state.personal.phone, v=>{state.personal.phone=v; refreshPreviewLive();}));
   card.appendChild(r2);
 
   const r3 = el('div',{class:'row2'});
-  r3.appendChild(field('City / Region', state.personal.city, v=>{state.personal.city=v; render();}));
-  r3.appendChild(field('LinkedIn (optional)', state.personal.linkedin, v=>{state.personal.linkedin=v; render();}));
+  r3.appendChild(field('City / Region', state.personal.city, v=>{state.personal.city=v; refreshPreviewLive();}));
+  r3.appendChild(field('LinkedIn (optional)', state.personal.linkedin, v=>{state.personal.linkedin=v; refreshPreviewLive();}));
   card.appendChild(r3);
 
   if(usesPhoto){
     const r4 = el('div',{class:'row3'});
-    r4.appendChild(field('Date of birth', state.personal.dob, v=>{state.personal.dob=v; render();}, 'text', 'e.g. 14/03/1994'));
-    r4.appendChild(field('Nationality', state.personal.nationality, v=>{state.personal.nationality=v; render();}, 'text', 'e.g. Moroccan'));
-    r4.appendChild(field('Driving licence', state.personal.permis, v=>{state.personal.permis=v; render();}, 'text', 'e.g. Category B'));
+    r4.appendChild(field('Date of birth', state.personal.dob, v=>{state.personal.dob=v; refreshPreviewLive();}, 'text', 'e.g. 14/03/1994'));
+    r4.appendChild(field('Nationality', state.personal.nationality, v=>{state.personal.nationality=v; refreshPreviewLive();}, 'text', 'e.g. Moroccan'));
+    r4.appendChild(field('Driving licence', state.personal.permis, v=>{state.personal.permis=v; refreshPreviewLive();}, 'text', 'e.g. Category B'));
     card.appendChild(r4);
     const r5 = el('div',{class:'row2'});
-    r5.appendChild(field('Marital status (optional)', state.personal.maritalStatus, v=>{state.personal.maritalStatus=v; render();}, 'text', 'e.g. Single'));
+    r5.appendChild(field('Marital status (optional)', state.personal.maritalStatus, v=>{state.personal.maritalStatus=v; refreshPreviewLive();}, 'text', 'e.g. Single'));
     card.appendChild(r5);
   }
 
@@ -356,7 +356,7 @@ function buildPersonalSection(){
 
 function buildSummarySection(){
   const card = sectionCard('📝 Professional Summary');
-  card.appendChild(field('Short summary (3-4 lines)', state.summary, v=>{state.summary=v; render();}, 'textarea'));
+  card.appendChild(field('Short summary (3-4 lines)', state.summary, v=>{state.summary=v; refreshPreviewLive();}, 'textarea'));
   return card;
 }
 
@@ -365,21 +365,21 @@ function buildExperienceSection(){
   state.experience.forEach((job, idx)=>{
     const entry = el('div',{class:'entry'});
     entry.appendChild(el('button',{class:'entry-remove', onclick:()=>{ state.experience.splice(idx,1); render(); }}, '✕'));
-    entry.appendChild(field('Job title', job.title, v=>{job.title=v; render();}));
+    entry.appendChild(field('Job title', job.title, v=>{job.title=v; refreshPreviewLive();}));
     const r = el('div',{class:'row2'});
-    r.appendChild(field('Company', job.company, v=>{job.company=v; render();}));
-    r.appendChild(field('Location', job.location, v=>{job.location=v; render();}));
+    r.appendChild(field('Company', job.company, v=>{job.company=v; refreshPreviewLive();}));
+    r.appendChild(field('Location', job.location, v=>{job.location=v; refreshPreviewLive();}));
     entry.appendChild(r);
     const r2 = el('div',{class:'row2'});
-    r2.appendChild(field('From (year)', job.start, v=>{job.start=v; render();}));
-    r2.appendChild(field('To (year or Present)', job.end, v=>{job.end=v; render();}));
+    r2.appendChild(field('From (year)', job.start, v=>{job.start=v; refreshPreviewLive();}));
+    r2.appendChild(field('To (year or Present)', job.end, v=>{job.end=v; refreshPreviewLive();}));
     entry.appendChild(r2);
     const bl = el('div',{class:'bullets-list'});
     bl.appendChild(el('label',{},'Achievements (one per line)'));
     const ta = el('textarea',{});
     ta.value = job.bullets.join('\n');
     ta.style.minHeight='90px';
-    ta.addEventListener('input', e=>{ job.bullets = e.target.value.split('\n').filter(x=>x.trim().length); render(); });
+    ta.addEventListener('input', e=>{ job.bullets = e.target.value.split('\n').filter(x=>x.trim().length); refreshPreviewLive(); });
     bl.appendChild(ta);
     entry.appendChild(bl);
     card.appendChild(entry);
@@ -396,14 +396,14 @@ function buildEducationSection(){
   state.education.forEach((ed, idx)=>{
     const entry = el('div',{class:'entry'});
     entry.appendChild(el('button',{class:'entry-remove', onclick:()=>{ state.education.splice(idx,1); render(); }}, '✕'));
-    entry.appendChild(field('Degree / Field of study', ed.degree, v=>{ed.degree=v; render();}));
+    entry.appendChild(field('Degree / Field of study', ed.degree, v=>{ed.degree=v; refreshPreviewLive();}));
     const r = el('div',{class:'row2'});
-    r.appendChild(field('Institution', ed.school, v=>{ed.school=v; render();}));
-    r.appendChild(field('Location', ed.location, v=>{ed.location=v; render();}));
+    r.appendChild(field('Institution', ed.school, v=>{ed.school=v; refreshPreviewLive();}));
+    r.appendChild(field('Location', ed.location, v=>{ed.location=v; refreshPreviewLive();}));
     entry.appendChild(r);
     const r2 = el('div',{class:'row2'});
-    r2.appendChild(field('From (year)', ed.start, v=>{ed.start=v; render();}));
-    r2.appendChild(field('To (year)', ed.end, v=>{ed.end=v; render();}));
+    r2.appendChild(field('From (year)', ed.start, v=>{ed.start=v; refreshPreviewLive();}));
+    r2.appendChild(field('To (year)', ed.end, v=>{ed.end=v; refreshPreviewLive();}));
     entry.appendChild(r2);
     card.appendChild(entry);
   });
@@ -418,7 +418,7 @@ function buildSkillsSection(){
   const card = sectionCard('🛠️ Skills');
   const skillsTa = el('textarea',{});
   skillsTa.value = state.skills.join(', ');
-  skillsTa.addEventListener('input', e=>{ state.skills = e.target.value.split(',').map(s=>s.trim()).filter(Boolean); render(); });
+  skillsTa.addEventListener('input', e=>{ state.skills = e.target.value.split(',').map(s=>s.trim()).filter(Boolean); refreshPreviewLive(); });
   card.appendChild(el('label',{}, 'Comma-separated'));
   card.appendChild(skillsTa);
 
@@ -455,8 +455,8 @@ function buildLanguagesSection(){
   const card = sectionCard('🌐 Languages');
   state.languages.forEach((lg, idx)=>{
     const r = el('div',{class:'row2', style:'align-items:end; margin-bottom:8px;'});
-    r.appendChild(field('Language', lg.name, v=>{lg.name=v; render();}));
-    r.appendChild(field('Level', lg.level, v=>{lg.level=v; render();}));
+    r.appendChild(field('Language', lg.name, v=>{lg.name=v; refreshPreviewLive();}));
+    r.appendChild(field('Level', lg.level, v=>{lg.level=v; refreshPreviewLive();}));
     const wrap = el('div',{style:'display:flex; gap:6px; align-items:center;'});
     wrap.appendChild(r);
     wrap.appendChild(el('button',{class:'entry-remove', style:'position:static;', onclick:()=>{ state.languages.splice(idx,1); render(); }}, '✕'));
@@ -470,7 +470,7 @@ function buildCertificationsSection(){
   const card = sectionCard('📜 Certifications (optional)');
   const certTa = el('textarea',{});
   certTa.value = state.certifications.join('\n');
-  certTa.addEventListener('input', e=>{ state.certifications = e.target.value.split('\n').filter(Boolean); render(); });
+  certTa.addEventListener('input', e=>{ state.certifications = e.target.value.split('\n').filter(Boolean); refreshPreviewLive(); });
   card.appendChild(el('label',{}, 'One per line'));
   card.appendChild(certTa);
   return card;
@@ -480,7 +480,7 @@ function buildInterestsSection(){
   const card = sectionCard('🎯 Interests (optional)');
   const intTa = el('textarea',{});
   intTa.value = state.interests.join(', ');
-  intTa.addEventListener('input', e=>{ state.interests = e.target.value.split(',').map(s=>s.trim()).filter(Boolean); render(); });
+  intTa.addEventListener('input', e=>{ state.interests = e.target.value.split(',').map(s=>s.trim()).filter(Boolean); refreshPreviewLive(); });
   card.appendChild(el('label',{}, 'Comma-separated'));
   card.appendChild(intTa);
   return card;
@@ -503,10 +503,10 @@ function buildThemeSection(){
 function buildLetterRecipientSection(){
   const card = sectionCard('🏢 Recipient & Date');
   const r1 = el('div',{class:'row2'});
-  r1.appendChild(field('Company name', state.coverLetter.companyName, v=>{state.coverLetter.companyName=v; render();}));
-  r1.appendChild(field('Hiring manager (optional)', state.coverLetter.hiringManager, v=>{state.coverLetter.hiringManager=v; render();}));
+  r1.appendChild(field('Company name', state.coverLetter.companyName, v=>{state.coverLetter.companyName=v; refreshPreviewLive();}));
+  r1.appendChild(field('Hiring manager (optional)', state.coverLetter.hiringManager, v=>{state.coverLetter.hiringManager=v; refreshPreviewLive();}));
   card.appendChild(r1);
-  card.appendChild(field('Date', state.coverLetter.date, v=>{state.coverLetter.date=v; render();}, 'text', 'e.g. September 2, 2026'));
+  card.appendChild(field('Date', state.coverLetter.date, v=>{state.coverLetter.date=v; refreshPreviewLive();}, 'text', 'e.g. September 2, 2026'));
   card.appendChild(el('button',{class:'file-btn', type:'button', onclick:()=>{
     state.coverLetter.date = new Date().toLocaleDateString(undefined,{year:'numeric', month:'long', day:'numeric'});
     render();
@@ -525,9 +525,9 @@ function buildLetterContentSection(){
   card.appendChild(toneRow);
 
   card.appendChild(el('button',{class:'add-btn', type:'button', style:'margin-bottom:12px;', onclick:generateLetterDraft}, '✨ Insert starter draft'));
-  card.appendChild(field('Opening paragraph', state.coverLetter.opening, v=>{state.coverLetter.opening=v; render();}, 'textarea'));
-  card.appendChild(field('Body paragraph', state.coverLetter.body, v=>{state.coverLetter.body=v; render();}, 'textarea'));
-  card.appendChild(field('Closing paragraph', state.coverLetter.closing, v=>{state.coverLetter.closing=v; render();}, 'textarea'));
+  card.appendChild(field('Opening paragraph', state.coverLetter.opening, v=>{state.coverLetter.opening=v; refreshPreviewLive();}, 'textarea'));
+  card.appendChild(field('Body paragraph', state.coverLetter.body, v=>{state.coverLetter.body=v; refreshPreviewLive();}, 'textarea'));
+  card.appendChild(field('Closing paragraph', state.coverLetter.closing, v=>{state.coverLetter.closing=v; refreshPreviewLive();}, 'textarea'));
   return card;
 }
 
@@ -742,7 +742,7 @@ window.addEventListener('resize', ()=>{
    state.photo data URL used by all CV renderers.
    ========================================================= */
 function bakePhoto(onDone){
-  if(!state.photoRaw){ state.photo = null; if(onDone) onDone(); else refreshPhotoLive(); return; }
+  if(!state.photoRaw){ state.photo = null; if(onDone) onDone(); else refreshPreviewLive(); return; }
   const img = new Image();
   img.onload = ()=>{
     const size = 400;
@@ -759,15 +759,17 @@ function bakePhoto(onDone){
     ctx.drawImage(img, -w/2 + state.photoAdjust.x, -h/2 + state.photoAdjust.y, w, h);
     ctx.restore();
     state.photo = canvas.toDataURL('image/jpeg', 0.92);
-    if(onDone) onDone(); else refreshPhotoLive();
+    if(onDone) onDone(); else refreshPreviewLive();
   };
   img.src = state.photoRaw;
 }
 
-// Lightweight refresh used while dragging sliders: updates the photo
-// preview + CV preview only, without rebuilding the whole form panel
-// (keeps slider drag/focus intact).
-function refreshPhotoLive(){
+// Lightweight refresh used on every keystroke and while dragging sliders:
+// updates the photo preview + CV preview only, without rebuilding the
+// whole form panel. Rebuilding the form panel on every keystroke would
+// destroy and recreate the focused <input>/<textarea>, which is what was
+// closing the on-screen keyboard after every typed or deleted character.
+function refreshPreviewLive(){
   const prev = document.getElementById('photoPreview');
   if(prev){
     prev.innerHTML='';
@@ -780,7 +782,7 @@ function refreshPhotoLive(){
     paperEl.innerHTML = state.view === 'letter'
       ? renderCoverLetter(theme)
       : RENDERERS[state.country][state.style[state.country]](theme);
-    paperEl.setAttribute('dir', state.country === 'ar' ? 'rtl' : 'ltr');
+    paperEl.setAttribute('dir', 'ltr'); // CV text is always English regardless of country
   }
 }
 
@@ -1001,8 +1003,8 @@ function renderCA_modern(theme){
 function renderFR_classic(theme){
   const p = state.personal;
   const civil = [
-    p.dob?`Né(e) le ${esc(p.dob)}`:'',
-    p.nationality?`Nationalité ${esc(p.nationality)}`:'',
+    p.dob?`Born ${esc(p.dob)}`:'',
+    p.nationality?`Nationality ${esc(p.nationality)}`:'',
     p.permis?esc(p.permis):''
   ].filter(Boolean).join(' · ');
   return `
@@ -1020,12 +1022,12 @@ function renderFR_classic(theme){
     </div>
 
     ${state.summary?`<div style="margin-bottom:16px;">
-      <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">PROFIL</div>
+      <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">PROFILE</div>
       <div style="font-size:12.5px; line-height:1.6;">${esc(state.summary)}</div>
     </div>`:''}
 
     <div style="margin-bottom:16px;">
-      <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">EXPÉRIENCE PROFESSIONNELLE</div>
+      <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">PROFESSIONAL EXPERIENCE</div>
       ${state.experience.map(job=>`
         <div style="margin-bottom:12px;">
           <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:600;">
@@ -1040,7 +1042,7 @@ function renderFR_classic(theme){
     </div>
 
     <div style="margin-bottom:16px;">
-      <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">FORMATION</div>
+      <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">EDUCATION</div>
       ${state.education.map(ed=>`
         <div style="display:flex; justify-content:space-between; font-size:12.5px; margin-bottom:4px;">
           <span><b>${esc(ed.degree)}</b>, ${esc(ed.school)} — ${esc(ed.location)}</span>
@@ -1050,16 +1052,16 @@ function renderFR_classic(theme){
 
     <div style="display:flex; gap:30px; margin-bottom:14px;">
       <div style="flex:1;">
-        <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">COMPÉTENCES</div>
+        <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">SKILLS</div>
         <div style="font-size:12px; line-height:1.6;">${state.skills.map(esc).join(' · ')}</div>
       </div>
       <div style="flex:1;">
-        <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">LANGUES</div>
+        <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">LANGUAGES</div>
         <div style="font-size:12px; line-height:1.6;">${state.languages.map(l=>`${esc(l.name)} : ${esc(l.level)}`).join(' · ')}</div>
       </div>
     </div>
     ${state.interests.length?`<div>
-      <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">CENTRES D'INTÉRÊT</div>
+      <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">INTERESTS</div>
       <div style="font-size:12px; line-height:1.6;">${state.interests.map(esc).join(' · ')}</div>
     </div>`:''}
   </div>`;
@@ -1068,7 +1070,7 @@ function renderFR_classic(theme){
 function renderFR_modern(theme){
   const p = state.personal;
   const civil = [
-    p.dob?`Né(e) le ${esc(p.dob)}`:'',
+    p.dob?`Born ${esc(p.dob)}`:'',
     p.nationality?`${esc(p.nationality)}`:'',
     p.permis?esc(p.permis):''
   ].filter(Boolean);
@@ -1085,21 +1087,21 @@ function renderFR_modern(theme){
       <div style="text-align:start; font-size:11px; line-height:1.9; margin-bottom:20px;">
         ${contactLine([['📧',p.email],['📞',p.phone],['📍',p.city]], '<br>')}
       </div>
-      ${civil.length?`<div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin-bottom:8px;">ÉTAT CIVIL</div>
+      ${civil.length?`<div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin-bottom:8px;">PERSONAL DETAILS</div>
       <div style="text-align:start; font-size:11px; line-height:1.9; margin-bottom:20px;">${civil.join('<br>')}</div>`:''}
 
-      <div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin-bottom:8px;">COMPÉTENCES</div>
+      <div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin-bottom:8px;">SKILLS</div>
       <div style="text-align:start; font-size:11px; line-height:2;">${state.skills.map(s=>`<div>• ${esc(s)}</div>`).join('')}</div>
 
-      <div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin:20px 0 8px;">LANGUES</div>
+      <div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin:20px 0 8px;">LANGUAGES</div>
       <div style="text-align:start; font-size:11px; line-height:1.9;">${state.languages.map(l=>`<div>${esc(l.name)} — ${esc(l.level)}</div>`).join('')}</div>
     </div>
     <div style="flex:1; padding:34px 30px; color:#1c1c1c;">
       ${state.summary?`<div style="margin-bottom:16px;">
-        <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:6px;">PROFIL</div>
+        <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:6px;">PROFILE</div>
         <div style="font-size:12.5px; line-height:1.55;">${esc(state.summary)}</div>
       </div>`:''}
-      <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:10px;">EXPÉRIENCE PROFESSIONNELLE</div>
+      <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:10px;">PROFESSIONAL EXPERIENCE</div>
       ${state.experience.map(job=>`
         <div style="margin-bottom:14px; border-inline-start:2px solid ${theme.soft}; padding-inline-start:12px;">
           <div style="font-weight:700; font-size:13px;">${esc(job.title)}, ${esc(job.company)}</div>
@@ -1108,11 +1110,11 @@ function renderFR_modern(theme){
             ${job.bullets.map(b=>`<li>${esc(b)}</li>`).join('')}
           </ul>
         </div>`).join('')}
-      <div style="font-size:13px; font-weight:700; color:${theme.main}; margin:16px 0 8px;">FORMATION</div>
+      <div style="font-size:13px; font-weight:700; color:${theme.main}; margin:16px 0 8px;">EDUCATION</div>
       ${state.education.map(ed=>`
         <div style="font-size:12.5px; margin-bottom:6px;"><b>${esc(ed.degree)}</b>, ${esc(ed.school)} — ${esc(ed.location)} (${esc(ed.start)}–${esc(ed.end)})</div>`).join('')}
       ${state.interests.length?`<div style="margin-top:14px;">
-        <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:6px;">CENTRES D'INTÉRÊT</div>
+        <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:6px;">INTERESTS</div>
         <div style="font-size:12px; line-height:1.6;">${state.interests.map(esc).join(' · ')}</div>
       </div>`:''}
     </div>
@@ -1232,16 +1234,16 @@ function renderUK_modern(theme){
 function renderDE_classic(theme){
   const p = state.personal;
   const civilRows = [
-    ['Geburtsdatum', p.dob],
-    ['Staatsangehörigkeit', p.nationality],
-    ['Familienstand', p.maritalStatus],
-    ['Führerschein', p.permis],
+    ['Date of birth', p.dob],
+    ['Nationality', p.nationality],
+    ['Marital status', p.maritalStatus],
+    ['Driving licence', p.permis],
   ].filter(r=>r[1]);
   return `
   <div style="font-family:'Source Serif 4', Georgia, serif; padding:38px 46px; color:#1c1c1c;">
     <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid ${theme.main}; padding-bottom:16px; margin-bottom:18px;">
       <div>
-        <div style="font-size:12px; font-weight:700; letter-spacing:1px; color:${theme.main}; margin-bottom:8px;">LEBENSLAUF</div>
+        <div style="font-size:12px; font-weight:700; letter-spacing:1px; color:${theme.main}; margin-bottom:8px;">CURRICULUM VITAE</div>
         <div style="font-size:24px; font-weight:600; font-family:'Fraunces',serif;">${esc(fullName())}</div>
         <div style="font-size:13px; color:#444; margin-top:2px;">${esc(p.jobTitle)}</div>
       </div>
@@ -1251,22 +1253,22 @@ function renderDE_classic(theme){
     </div>
 
     <div style="margin-bottom:18px;">
-      <div style="font-size:12px; font-weight:700; letter-spacing:1px; color:${theme.main}; margin-bottom:8px;">PERSÖNLICHE DATEN</div>
+      <div style="font-size:12px; font-weight:700; letter-spacing:1px; color:${theme.main}; margin-bottom:8px;">PERSONAL DETAILS</div>
       <table style="font-size:12px; width:100%; border-collapse:collapse;">
-        <tr><td style="width:150px; color:#666; padding:2px 0;">📧 E-Mail</td><td>${esc(p.email)}</td></tr>
-        <tr><td style="color:#666; padding:2px 0;">📞 Telefon</td><td>${esc(p.phone)}</td></tr>
-        <tr><td style="color:#666; padding:2px 0;">📍 Adresse</td><td>${esc(p.city)}</td></tr>
+        <tr><td style="width:150px; color:#666; padding:2px 0;">📧 Email</td><td>${esc(p.email)}</td></tr>
+        <tr><td style="color:#666; padding:2px 0;">📞 Phone</td><td>${esc(p.phone)}</td></tr>
+        <tr><td style="color:#666; padding:2px 0;">📍 Address</td><td>${esc(p.city)}</td></tr>
         ${civilRows.map(([k,v])=>`<tr><td style="color:#666; padding:2px 0;">${k}</td><td>${esc(v)}</td></tr>`).join('')}
       </table>
     </div>
 
     ${state.summary?`<div style="margin-bottom:18px;">
-      <div style="font-size:12px; font-weight:700; letter-spacing:1px; color:${theme.main}; margin-bottom:6px;">PROFIL</div>
+      <div style="font-size:12px; font-weight:700; letter-spacing:1px; color:${theme.main}; margin-bottom:6px;">PROFILE</div>
       <div style="font-size:12.5px; line-height:1.55;">${esc(state.summary)}</div>
     </div>`:''}
 
     <div style="margin-bottom:18px;">
-      <div style="font-size:12px; font-weight:700; letter-spacing:1px; color:${theme.main}; margin-bottom:8px;">BERUFSERFAHRUNG</div>
+      <div style="font-size:12px; font-weight:700; letter-spacing:1px; color:${theme.main}; margin-bottom:8px;">PROFESSIONAL EXPERIENCE</div>
       ${state.experience.map(job=>`
         <div style="display:flex; gap:16px; margin-bottom:12px;">
           <div style="width:110px; flex-shrink:0; font-size:11.5px; color:#555;">${esc(job.start)} – ${esc(job.end)}</div>
@@ -1281,7 +1283,7 @@ function renderDE_classic(theme){
     </div>
 
     <div style="margin-bottom:18px;">
-      <div style="font-size:12px; font-weight:700; letter-spacing:1px; color:${theme.main}; margin-bottom:8px;">AUSBILDUNG</div>
+      <div style="font-size:12px; font-weight:700; letter-spacing:1px; color:${theme.main}; margin-bottom:8px;">EDUCATION</div>
       ${state.education.map(ed=>`
         <div style="display:flex; gap:16px; margin-bottom:8px;">
           <div style="width:110px; flex-shrink:0; font-size:11.5px; color:#555;">${esc(ed.start)} – ${esc(ed.end)}</div>
@@ -1291,11 +1293,11 @@ function renderDE_classic(theme){
 
     <div style="display:flex; gap:34px;">
       <div style="flex:1;">
-        <div style="font-size:12px; font-weight:700; letter-spacing:1px; color:${theme.main}; margin-bottom:6px;">KENNTNISSE</div>
+        <div style="font-size:12px; font-weight:700; letter-spacing:1px; color:${theme.main}; margin-bottom:6px;">SKILLS</div>
         <div style="font-size:12px; line-height:1.6;">${state.skills.map(esc).join(' · ')}</div>
       </div>
       <div style="flex:1;">
-        <div style="font-size:12px; font-weight:700; letter-spacing:1px; color:${theme.main}; margin-bottom:6px;">SPRACHEN</div>
+        <div style="font-size:12px; font-weight:700; letter-spacing:1px; color:${theme.main}; margin-bottom:6px;">LANGUAGES</div>
         <div style="font-size:12px; line-height:1.6;">${state.languages.map(l=>`${esc(l.name)}: ${esc(l.level)}`).join(' · ')}</div>
       </div>
     </div>
@@ -1305,10 +1307,10 @@ function renderDE_classic(theme){
 function renderDE_modern(theme){
   const p = state.personal;
   const civilRows = [
-    ['Geburtsdatum', p.dob],
-    ['Staatsangehörigkeit', p.nationality],
-    ['Familienstand', p.maritalStatus],
-    ['Führerschein', p.permis],
+    ['Date of birth', p.dob],
+    ['Nationality', p.nationality],
+    ['Marital status', p.maritalStatus],
+    ['Driving licence', p.permis],
   ].filter(r=>r[1]);
   return `
   <div style="font-family:'Inter', sans-serif; display:flex; min-height:297mm;">
@@ -1319,25 +1321,25 @@ function renderDE_modern(theme){
       <div style="font-size:19px; font-weight:700; font-family:'Fraunces',serif;">${esc(fullName())}</div>
       <div style="font-size:12px; opacity:.85; margin-top:4px; margin-bottom:20px;">${esc(p.jobTitle)}</div>
 
-      <div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin-bottom:8px;">KONTAKT</div>
+      <div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin-bottom:8px;">CONTACT</div>
       <div style="text-align:start; font-size:11px; line-height:1.9; margin-bottom:20px;">
         ${contactLine([['📧',p.email],['📞',p.phone],['📍',p.city]], '<br>')}
       </div>
-      ${civilRows.length?`<div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin-bottom:8px;">PERSÖNLICHE DATEN</div>
+      ${civilRows.length?`<div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin-bottom:8px;">PERSONAL DETAILS</div>
       <div style="text-align:start; font-size:11px; line-height:1.9; margin-bottom:20px;">${civilRows.map(([k,v])=>`${k}: ${esc(v)}`).join('<br>')}</div>`:''}
 
-      <div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin-bottom:8px;">KENNTNISSE</div>
+      <div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin-bottom:8px;">SKILLS</div>
       <div style="text-align:start; font-size:11px; line-height:2;">${state.skills.map(s=>`<div>• ${esc(s)}</div>`).join('')}</div>
 
-      <div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin:20px 0 8px;">SPRACHEN</div>
+      <div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin:20px 0 8px;">LANGUAGES</div>
       <div style="text-align:start; font-size:11px; line-height:1.9;">${state.languages.map(l=>`<div>${esc(l.name)} — ${esc(l.level)}</div>`).join('')}</div>
     </div>
     <div style="flex:1; padding:34px 30px; color:#1c1c1c;">
       ${state.summary?`<div style="margin-bottom:16px;">
-        <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:6px;">PROFIL</div>
+        <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:6px;">PROFILE</div>
         <div style="font-size:12.5px; line-height:1.55;">${esc(state.summary)}</div>
       </div>`:''}
-      <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:10px;">BERUFSERFAHRUNG</div>
+      <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:10px;">PROFESSIONAL EXPERIENCE</div>
       ${state.experience.map(job=>`
         <div style="margin-bottom:14px; border-inline-start:2px solid ${theme.soft}; padding-inline-start:12px;">
           <div style="font-weight:700; font-size:13px;">${esc(job.title)}, ${esc(job.company)}</div>
@@ -1346,7 +1348,7 @@ function renderDE_modern(theme){
             ${job.bullets.map(b=>`<li>${esc(b)}</li>`).join('')}
           </ul>
         </div>`).join('')}
-      <div style="font-size:13px; font-weight:700; color:${theme.main}; margin:16px 0 8px;">AUSBILDUNG</div>
+      <div style="font-size:13px; font-weight:700; color:${theme.main}; margin:16px 0 8px;">EDUCATION</div>
       ${state.education.map(ed=>`
         <div style="font-size:12.5px; margin-bottom:6px;"><b>${esc(ed.degree)}</b>, ${esc(ed.school)} — ${esc(ed.location)} (${esc(ed.start)}–${esc(ed.end)})</div>`).join('')}
     </div>
@@ -1462,15 +1464,15 @@ function renderAU_modern(theme){
 function renderES_classic(theme){
   const p = state.personal;
   const datos = [
-    p.dob?`Fecha de nacimiento: ${esc(p.dob)}`:'',
-    p.nationality?`Nacionalidad: ${esc(p.nationality)}`:'',
-    p.permis?`Carnet de conducir: ${esc(p.permis)}`:''
+    p.dob?`Date of birth: ${esc(p.dob)}`:'',
+    p.nationality?`Nationality: ${esc(p.nationality)}`:'',
+    p.permis?`Driving licence: ${esc(p.permis)}`:''
   ].filter(Boolean).join(' · ');
   return `
   <div style="font-family:'Source Serif 4', Georgia, serif; padding:40px 46px; color:#1c1c1c;">
     <div style="display:flex; gap:22px; align-items:center; border-bottom:2px solid ${theme.main}; padding-bottom:16px; margin-bottom:18px;">
       <div style="width:78px; height:78px; border-radius:50%; overflow:hidden; background:${theme.soft}; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:10px; color:#888;">
-        ${state.photo?`<img src="${state.photo}" style="width:100%; height:100%; object-fit:cover;">`:'Foto'}
+        ${state.photo?`<img src="${state.photo}" style="width:100%; height:100%; object-fit:cover;">`:'Photo'}
       </div>
       <div>
         <div style="font-size:24px; font-weight:600; font-family:'Fraunces',serif;">${esc(fullName())}</div>
@@ -1481,12 +1483,12 @@ function renderES_classic(theme){
     </div>
 
     ${state.summary?`<div style="margin-bottom:16px;">
-      <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">PERFIL PROFESIONAL</div>
+      <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">PROFESSIONAL PROFILE</div>
       <div style="font-size:12.5px; line-height:1.6;">${esc(state.summary)}</div>
     </div>`:''}
 
     <div style="margin-bottom:16px;">
-      <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">EXPERIENCIA LABORAL</div>
+      <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">WORK EXPERIENCE</div>
       ${state.experience.map(job=>`
         <div style="margin-bottom:12px;">
           <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:600;">
@@ -1501,7 +1503,7 @@ function renderES_classic(theme){
     </div>
 
     <div style="margin-bottom:16px;">
-      <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">FORMACIÓN</div>
+      <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">EDUCATION</div>
       ${state.education.map(ed=>`
         <div style="display:flex; justify-content:space-between; font-size:12.5px; margin-bottom:4px;">
           <span><b>${esc(ed.degree)}</b>, ${esc(ed.school)} — ${esc(ed.location)}</span>
@@ -1511,16 +1513,16 @@ function renderES_classic(theme){
 
     <div style="display:flex; gap:30px; margin-bottom:14px;">
       <div style="flex:1;">
-        <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">APTITUDES</div>
+        <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">SKILLS</div>
         <div style="font-size:12px; line-height:1.6;">${state.skills.map(esc).join(' · ')}</div>
       </div>
       <div style="flex:1;">
-        <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">IDIOMAS</div>
+        <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">LANGUAGES</div>
         <div style="font-size:12px; line-height:1.6;">${state.languages.map(l=>`${esc(l.name)}: ${esc(l.level)}`).join(' · ')}</div>
       </div>
     </div>
     ${state.interests.length?`<div>
-      <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">AFICIONES</div>
+      <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">INTERESTS</div>
       <div style="font-size:12px; line-height:1.6;">${state.interests.map(esc).join(' · ')}</div>
     </div>`:''}
   </div>`;
@@ -1535,30 +1537,30 @@ function renderES_modern(theme){
   <div style="font-family:'Inter', sans-serif; display:flex; min-height:297mm;">
     <div style="width:32%; background:${theme.main}; color:#fff; padding:34px 24px; text-align:center;">
       <div style="width:96px; height:96px; border-radius:50%; overflow:hidden; margin:0 auto 14px; background:rgba(255,255,255,.15); display:flex; align-items:center; justify-content:center; font-size:11px;">
-        ${state.photo?`<img src="${state.photo}" style="width:100%; height:100%; object-fit:cover;">`:'Foto'}
+        ${state.photo?`<img src="${state.photo}" style="width:100%; height:100%; object-fit:cover;">`:'Photo'}
       </div>
       <div style="font-size:19px; font-weight:700; font-family:'Fraunces',serif;">${esc(fullName())}</div>
       <div style="font-size:12px; opacity:.85; margin-top:4px; margin-bottom:20px;">${esc(p.jobTitle)}</div>
 
-      <div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin-bottom:8px;">CONTACTO</div>
+      <div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin-bottom:8px;">CONTACT</div>
       <div style="text-align:start; font-size:11px; line-height:1.9; margin-bottom:20px;">
         ${contactLine([['📧',p.email],['📞',p.phone],['📍',p.city]], '<br>')}
       </div>
-      ${datos.length?`<div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin-bottom:8px;">DATOS PERSONALES</div>
+      ${datos.length?`<div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin-bottom:8px;">PERSONAL DETAILS</div>
       <div style="text-align:start; font-size:11px; line-height:1.9; margin-bottom:20px;">${datos.join('<br>')}</div>`:''}
 
-      <div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin-bottom:8px;">APTITUDES</div>
+      <div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin-bottom:8px;">SKILLS</div>
       <div style="text-align:start; font-size:11px; line-height:2;">${state.skills.map(s=>`<div>• ${esc(s)}</div>`).join('')}</div>
 
-      <div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin:20px 0 8px;">IDIOMAS</div>
+      <div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin:20px 0 8px;">LANGUAGES</div>
       <div style="text-align:start; font-size:11px; line-height:1.9;">${state.languages.map(l=>`<div>${esc(l.name)} — ${esc(l.level)}</div>`).join('')}</div>
     </div>
     <div style="flex:1; padding:34px 30px; color:#1c1c1c;">
       ${state.summary?`<div style="margin-bottom:16px;">
-        <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:6px;">PERFIL PROFESIONAL</div>
+        <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:6px;">PROFESSIONAL PROFILE</div>
         <div style="font-size:12.5px; line-height:1.55;">${esc(state.summary)}</div>
       </div>`:''}
-      <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:10px;">EXPERIENCIA LABORAL</div>
+      <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:10px;">WORK EXPERIENCE</div>
       ${state.experience.map(job=>`
         <div style="margin-bottom:14px; border-inline-start:2px solid ${theme.soft}; padding-inline-start:12px;">
           <div style="font-weight:700; font-size:13px;">${esc(job.title)}, ${esc(job.company)}</div>
@@ -1567,11 +1569,11 @@ function renderES_modern(theme){
             ${job.bullets.map(b=>`<li>${esc(b)}</li>`).join('')}
           </ul>
         </div>`).join('')}
-      <div style="font-size:13px; font-weight:700; color:${theme.main}; margin:16px 0 8px;">FORMACIÓN</div>
+      <div style="font-size:13px; font-weight:700; color:${theme.main}; margin:16px 0 8px;">EDUCATION</div>
       ${state.education.map(ed=>`
         <div style="font-size:12.5px; margin-bottom:6px;"><b>${esc(ed.degree)}</b>, ${esc(ed.school)} — ${esc(ed.location)} (${esc(ed.start)}–${esc(ed.end)})</div>`).join('')}
       ${state.interests.length?`<div style="margin-top:14px;">
-        <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:6px;">AFICIONES</div>
+        <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:6px;">INTERESTS</div>
         <div style="font-size:12px; line-height:1.6;">${state.interests.map(esc).join(' · ')}</div>
       </div>`:''}
     </div>
@@ -1589,12 +1591,12 @@ function renderNL_classic(theme){
     </div>
 
     ${state.summary?`<div style="margin-bottom:16px;">
-      <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:6px;">PROFIEL</div>
+      <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:6px;">PROFILE</div>
       <div style="font-size:12.5px; line-height:1.55;">${esc(state.summary)}</div>
     </div>`:''}
 
     <div style="margin-bottom:16px;">
-      <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:8px;">WERKERVARING</div>
+      <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:8px;">WORK EXPERIENCE</div>
       ${state.experience.map(job=>`
         <div style="margin-bottom:12px;">
           <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:700;">
@@ -1609,7 +1611,7 @@ function renderNL_classic(theme){
     </div>
 
     <div style="margin-bottom:16px;">
-      <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:8px;">OPLEIDING</div>
+      <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:8px;">EDUCATION</div>
       ${state.education.map(ed=>`
         <div style="display:flex; justify-content:space-between; font-size:12.5px; margin-bottom:4px;">
           <span><b>${esc(ed.degree)}</b> — ${esc(ed.school)}, ${esc(ed.location)}</span>
@@ -1619,11 +1621,11 @@ function renderNL_classic(theme){
 
     <div style="display:flex; gap:34px;">
       <div style="flex:1;">
-        <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:6px;">VAARDIGHEDEN</div>
+        <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:6px;">SKILLS</div>
         <div style="font-size:12px; line-height:1.6;">${state.skills.map(esc).join(' · ')}</div>
       </div>
       <div style="flex:1;">
-        <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:6px;">TALEN</div>
+        <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:6px;">LANGUAGES</div>
         <div style="font-size:12px; line-height:1.6;">${state.languages.map(l=>`${esc(l.name)} (${esc(l.level)})`).join(' · ')}</div>
       </div>
     </div>
@@ -1641,12 +1643,12 @@ function renderNL_modern(theme){
     </div>
     <div style="padding:26px 46px;">
       ${state.summary?`<div style="margin-bottom:16px;">
-        <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:6px;">PROFIEL</div>
+        <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:6px;">PROFILE</div>
         <div style="font-size:12.5px; line-height:1.55;">${esc(state.summary)}</div>
       </div>`:''}
       <div style="display:grid; grid-template-columns:2.1fr 1fr; gap:28px;">
         <div>
-          <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:8px;">WERKERVARING</div>
+          <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:8px;">WORK EXPERIENCE</div>
           ${state.experience.map(job=>`
             <div style="margin-bottom:12px;">
               <div style="font-size:13px; font-weight:700;">${esc(job.title)}</div>
@@ -1655,14 +1657,14 @@ function renderNL_modern(theme){
                 ${job.bullets.map(b=>`<li>${esc(b)}</li>`).join('')}
               </ul>
             </div>`).join('')}
-          <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin:16px 0 8px;">OPLEIDING</div>
+          <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin:16px 0 8px;">EDUCATION</div>
           ${state.education.map(ed=>`
             <div style="font-size:12.5px; margin-bottom:6px;"><b>${esc(ed.degree)}</b> — ${esc(ed.school)}, ${esc(ed.location)} (${esc(ed.start)}–${esc(ed.end)})</div>`).join('')}
         </div>
         <div>
-          <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:8px;">VAARDIGHEDEN</div>
+          <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:8px;">SKILLS</div>
           <div style="font-size:12px; line-height:1.8; margin-bottom:16px;">${state.skills.map(s=>`<div>${esc(s)}</div>`).join('')}</div>
-          <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:8px;">TALEN</div>
+          <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:8px;">LANGUAGES</div>
           <div style="font-size:12px; line-height:1.8;">${state.languages.map(l=>`<div>${esc(l.name)} — ${esc(l.level)}</div>`).join('')}</div>
         </div>
       </div>
@@ -1674,46 +1676,46 @@ function renderNL_modern(theme){
 function renderAR_classic(theme){
   const p = state.personal;
   const civilRows = [
-    ['تاريخ الميلاد', p.dob],
-    ['الجنسية', p.nationality],
-    ['الحالة الاجتماعية', p.maritalStatus],
-    ['رخصة القيادة', p.permis],
+    ['Date of birth', p.dob],
+    ['Nationality', p.nationality],
+    ['Marital status', p.maritalStatus],
+    ['Driving licence', p.permis],
   ].filter(r=>r[1]);
   return `
-  <div dir="rtl" style="font-family:'Cairo','Tajawal', sans-serif; padding:38px 46px; color:#1c1c1c;">
+  <div dir="ltr" style="font-family:'Cairo','Tajawal', sans-serif; padding:38px 46px; color:#1c1c1c;">
     <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid ${theme.main}; padding-bottom:16px; margin-bottom:18px;">
       <div>
-        <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">السيرة الذاتية</div>
+        <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">CURRICULUM VITAE</div>
         <div style="font-size:24px; font-weight:700; font-family:'Cairo',sans-serif;">${esc(fullName())}</div>
         <div style="font-size:13px; color:#444; margin-top:2px;">${esc(p.jobTitle)}</div>
       </div>
       <div style="width:76px; height:76px; border-radius:4px; overflow:hidden; background:${theme.soft}; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:10px; color:#888;">
-        ${state.photo?`<img src="${state.photo}" style="width:100%; height:100%; object-fit:cover;">`:'صورة'}
+        ${state.photo?`<img src="${state.photo}" style="width:100%; height:100%; object-fit:cover;">`:'Photo'}
       </div>
     </div>
 
     <div style="margin-bottom:18px;">
-      <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">البيانات الشخصية</div>
+      <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">PERSONAL DETAILS</div>
       <table style="font-size:12px; width:100%; border-collapse:collapse;">
-        <tr><td style="width:150px; color:#666; padding:2px 0;">📧 البريد الإلكتروني</td><td>${esc(p.email)}</td></tr>
-        <tr><td style="color:#666; padding:2px 0;">📞 الهاتف</td><td>${esc(p.phone)}</td></tr>
-        <tr><td style="color:#666; padding:2px 0;">📍 المدينة</td><td>${esc(p.city)}</td></tr>
+        <tr><td style="width:150px; color:#666; padding:2px 0;">📧 Email</td><td>${esc(p.email)}</td></tr>
+        <tr><td style="color:#666; padding:2px 0;">📞 Phone</td><td>${esc(p.phone)}</td></tr>
+        <tr><td style="color:#666; padding:2px 0;">📍 City</td><td>${esc(p.city)}</td></tr>
         ${civilRows.map(([k,v])=>`<tr><td style="color:#666; padding:2px 0;">${k}</td><td>${esc(v)}</td></tr>`).join('')}
       </table>
     </div>
 
     ${state.summary?`<div style="margin-bottom:18px;">
-      <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">الملخص المهني</div>
+      <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">PROFESSIONAL SUMMARY</div>
       <div style="font-size:12.5px; line-height:1.7;">${esc(state.summary)}</div>
     </div>`:''}
 
     <div style="margin-bottom:18px;">
-      <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">الخبرة العملية</div>
+      <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">WORK EXPERIENCE</div>
       ${state.experience.map(job=>`
         <div style="display:flex; gap:16px; margin-bottom:12px;">
           <div style="width:110px; flex-shrink:0; font-size:11.5px; color:#555;">${esc(job.start)} – ${esc(job.end)}</div>
           <div>
-            <div style="font-size:13px; font-weight:700;">${esc(job.title)}، ${esc(job.company)}</div>
+            <div style="font-size:13px; font-weight:700;">${esc(job.title)}, ${esc(job.company)}</div>
             <div style="font-size:11.5px; color:#666; font-style:italic; margin-bottom:4px;">${esc(job.location)}</div>
             <ul style="margin:0; padding-inline-start:18px; font-size:12px; line-height:1.7;">
               ${job.bullets.map(b=>`<li>${esc(b)}</li>`).join('')}
@@ -1723,30 +1725,30 @@ function renderAR_classic(theme){
     </div>
 
     <div style="margin-bottom:18px;">
-      <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">المؤهلات العلمية</div>
+      <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">EDUCATION</div>
       ${state.education.map(ed=>`
         <div style="display:flex; gap:16px; margin-bottom:8px;">
           <div style="width:110px; flex-shrink:0; font-size:11.5px; color:#555;">${esc(ed.start)} – ${esc(ed.end)}</div>
-          <div style="font-size:12.5px;"><b>${esc(ed.degree)}</b>، ${esc(ed.school)} — ${esc(ed.location)}</div>
+          <div style="font-size:12.5px;"><b>${esc(ed.degree)}</b>, ${esc(ed.school)} — ${esc(ed.location)}</div>
         </div>`).join('')}
     </div>
 
     <div style="display:flex; gap:34px;">
       <div style="flex:1;">
-        <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">المهارات</div>
+        <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">SKILLS</div>
         <div style="font-size:12px; line-height:1.7;">${state.skills.map(esc).join(' · ')}</div>
       </div>
       <div style="flex:1;">
-        <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">اللغات</div>
+        <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">LANGUAGES</div>
         <div style="font-size:12px; line-height:1.7;">${state.languages.map(l=>`${esc(l.name)}: ${esc(l.level)}`).join(' · ')}</div>
       </div>
     </div>
     ${state.certifications.length?`<div style="margin-top:14px;">
-      <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">الشهادات</div>
+      <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">CERTIFICATIONS</div>
       <div style="font-size:12px; line-height:1.7;">${state.certifications.map(esc).join(' · ')}</div>
     </div>`:''}
     ${state.interests.length?`<div style="margin-top:14px;">
-      <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">الاهتمامات</div>
+      <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">INTERESTS</div>
       <div style="font-size:12px; line-height:1.7;">${state.interests.map(esc).join(' · ')}</div>
     </div>`:''}
   </div>`;
@@ -1756,52 +1758,52 @@ function renderAR_classic(theme){
 function renderAR_modern(theme){
   const p = state.personal;
   const civil = [
-    p.dob?`تاريخ الميلاد: ${esc(p.dob)}`:'',
-    p.nationality?`الجنسية: ${esc(p.nationality)}`:'',
-    p.maritalStatus?`الحالة الاجتماعية: ${esc(p.maritalStatus)}`:'',
-    p.permis?`رخصة القيادة: ${esc(p.permis)}`:''
+    p.dob?`Date of birth: ${esc(p.dob)}`:'',
+    p.nationality?`Nationality: ${esc(p.nationality)}`:'',
+    p.maritalStatus?`Marital status: ${esc(p.maritalStatus)}`:'',
+    p.permis?`Driving licence: ${esc(p.permis)}`:''
   ].filter(Boolean);
   return `
-  <div dir="rtl" style="font-family:'Cairo','Tajawal', sans-serif; display:flex; min-height:297mm;">
+  <div dir="ltr" style="font-family:'Cairo','Tajawal', sans-serif; display:flex; min-height:297mm;">
     <div style="width:32%; background:${theme.main}; color:#fff; padding:34px 24px; text-align:center;">
       <div style="width:96px; height:96px; border-radius:50%; overflow:hidden; margin:0 auto 14px; background:rgba(255,255,255,.15); display:flex; align-items:center; justify-content:center; font-size:11px;">
-        ${state.photo?`<img src="${state.photo}" style="width:100%; height:100%; object-fit:cover;">`:'صورة'}
+        ${state.photo?`<img src="${state.photo}" style="width:100%; height:100%; object-fit:cover;">`:'Photo'}
       </div>
       <div style="font-size:19px; font-weight:700;">${esc(fullName())}</div>
       <div style="font-size:12px; opacity:.85; margin-top:4px; margin-bottom:20px;">${esc(p.jobTitle)}</div>
 
-      <div style="text-align:start; font-size:11px; letter-spacing:.5px; opacity:.7; margin-bottom:8px;">التواصل</div>
+      <div style="text-align:start; font-size:11px; letter-spacing:.5px; opacity:.7; margin-bottom:8px;">CONTACT</div>
       <div style="text-align:start; font-size:11px; line-height:1.9; margin-bottom:20px;">
         ${contactLine([['📧',p.email],['📞',p.phone],['📍',p.city]], '<br>')}
       </div>
-      ${civil.length?`<div style="text-align:start; font-size:11px; letter-spacing:.5px; opacity:.7; margin-bottom:8px;">البيانات الشخصية</div>
+      ${civil.length?`<div style="text-align:start; font-size:11px; letter-spacing:.5px; opacity:.7; margin-bottom:8px;">PERSONAL DETAILS</div>
       <div style="text-align:start; font-size:11px; line-height:1.9; margin-bottom:20px;">${civil.join('<br>')}</div>`:''}
 
-      <div style="text-align:start; font-size:11px; letter-spacing:.5px; opacity:.7; margin-bottom:8px;">المهارات</div>
+      <div style="text-align:start; font-size:11px; letter-spacing:.5px; opacity:.7; margin-bottom:8px;">SKILLS</div>
       <div style="text-align:start; font-size:11px; line-height:2;">${state.skills.map(s=>`<div>• ${esc(s)}</div>`).join('')}</div>
 
-      <div style="text-align:start; font-size:11px; letter-spacing:.5px; opacity:.7; margin:20px 0 8px;">اللغات</div>
+      <div style="text-align:start; font-size:11px; letter-spacing:.5px; opacity:.7; margin:20px 0 8px;">LANGUAGES</div>
       <div style="text-align:start; font-size:11px; line-height:1.9;">${state.languages.map(l=>`<div>${esc(l.name)} — ${esc(l.level)}</div>`).join('')}</div>
     </div>
     <div style="flex:1; padding:34px 30px; color:#1c1c1c;">
       ${state.summary?`<div style="margin-bottom:16px;">
-        <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:6px;">الملخص المهني</div>
+        <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:6px;">PROFESSIONAL SUMMARY</div>
         <div style="font-size:12.5px; line-height:1.65;">${esc(state.summary)}</div>
       </div>`:''}
-      <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:10px;">الخبرة العملية</div>
+      <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:10px;">WORK EXPERIENCE</div>
       ${state.experience.map(job=>`
         <div style="margin-bottom:14px; border-inline-start:2px solid ${theme.soft}; padding-inline-start:12px;">
-          <div style="font-weight:700; font-size:13px;">${esc(job.title)}، ${esc(job.company)}</div>
+          <div style="font-weight:700; font-size:13px;">${esc(job.title)}, ${esc(job.company)}</div>
           <div style="font-size:11.5px; color:#555; margin-bottom:4px;">${esc(job.location)} · ${esc(job.start)}–${esc(job.end)}</div>
           <ul style="margin:0; padding-inline-start:16px; font-size:12px; line-height:1.6;">
             ${job.bullets.map(b=>`<li>${esc(b)}</li>`).join('')}
           </ul>
         </div>`).join('')}
-      <div style="font-size:13px; font-weight:700; color:${theme.main}; margin:16px 0 8px;">المؤهلات العلمية</div>
+      <div style="font-size:13px; font-weight:700; color:${theme.main}; margin:16px 0 8px;">EDUCATION</div>
       ${state.education.map(ed=>`
-        <div style="font-size:12.5px; margin-bottom:6px;"><b>${esc(ed.degree)}</b>، ${esc(ed.school)} — ${esc(ed.location)} (${esc(ed.start)}–${esc(ed.end)})</div>`).join('')}
+        <div style="font-size:12.5px; margin-bottom:6px;"><b>${esc(ed.degree)}</b>, ${esc(ed.school)} — ${esc(ed.location)} (${esc(ed.start)}–${esc(ed.end)})</div>`).join('')}
       ${state.interests.length?`<div style="margin-top:14px;">
-        <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:6px;">الاهتمامات</div>
+        <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:6px;">INTERESTS</div>
         <div style="font-size:12px; line-height:1.7;">${state.interests.map(esc).join(' · ')}</div>
       </div>`:''}
     </div>
@@ -1812,15 +1814,15 @@ function renderAR_modern(theme){
 function renderBR_classic(theme){
   const p = state.personal;
   const dados = [
-    p.dob?`Data de nascimento: ${esc(p.dob)}`:'',
-    p.nationality?`Nacionalidade: ${esc(p.nationality)}`:'',
-    p.permis?`CNH: ${esc(p.permis)}`:''
+    p.dob?`Date of birth: ${esc(p.dob)}`:'',
+    p.nationality?`Nationality: ${esc(p.nationality)}`:'',
+    p.permis?`Driving licence: ${esc(p.permis)}`:''
   ].filter(Boolean).join(' · ');
   return `
   <div style="font-family:'Source Serif 4', Georgia, serif; padding:40px 46px; color:#1c1c1c;">
     <div style="display:flex; gap:22px; align-items:center; border-bottom:2px solid ${theme.main}; padding-bottom:16px; margin-bottom:18px;">
       <div style="width:78px; height:78px; border-radius:50%; overflow:hidden; background:${theme.soft}; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:10px; color:#888;">
-        ${state.photo?`<img src="${state.photo}" style="width:100%; height:100%; object-fit:cover;">`:'Foto'}
+        ${state.photo?`<img src="${state.photo}" style="width:100%; height:100%; object-fit:cover;">`:'Photo'}
       </div>
       <div>
         <div style="font-size:24px; font-weight:600; font-family:'Fraunces',serif;">${esc(fullName())}</div>
@@ -1831,12 +1833,12 @@ function renderBR_classic(theme){
     </div>
 
     ${state.summary?`<div style="margin-bottom:16px;">
-      <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">RESUMO PROFISSIONAL</div>
+      <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">PROFESSIONAL SUMMARY</div>
       <div style="font-size:12.5px; line-height:1.6;">${esc(state.summary)}</div>
     </div>`:''}
 
     <div style="margin-bottom:16px;">
-      <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">EXPERIÊNCIA PROFISSIONAL</div>
+      <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">PROFESSIONAL EXPERIENCE</div>
       ${state.experience.map(job=>`
         <div style="margin-bottom:12px;">
           <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:600;">
@@ -1851,7 +1853,7 @@ function renderBR_classic(theme){
     </div>
 
     <div style="margin-bottom:16px;">
-      <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">FORMAÇÃO ACADÊMICA</div>
+      <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">EDUCATION</div>
       ${state.education.map(ed=>`
         <div style="display:flex; justify-content:space-between; font-size:12.5px; margin-bottom:4px;">
           <span><b>${esc(ed.degree)}</b>, ${esc(ed.school)} — ${esc(ed.location)}</span>
@@ -1861,16 +1863,16 @@ function renderBR_classic(theme){
 
     <div style="display:flex; gap:30px; margin-bottom:14px;">
       <div style="flex:1;">
-        <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">HABILIDADES</div>
+        <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">SKILLS</div>
         <div style="font-size:12px; line-height:1.6;">${state.skills.map(esc).join(' · ')}</div>
       </div>
       <div style="flex:1;">
-        <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">IDIOMAS</div>
+        <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">LANGUAGES</div>
         <div style="font-size:12px; line-height:1.6;">${state.languages.map(l=>`${esc(l.name)}: ${esc(l.level)}`).join(' · ')}</div>
       </div>
     </div>
     ${state.interests.length?`<div>
-      <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">INTERESSES</div>
+      <div style="font-size:12.5px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">INTERESTS</div>
       <div style="font-size:12px; line-height:1.6;">${state.interests.map(esc).join(' · ')}</div>
     </div>`:''}
   </div>`;
@@ -1885,30 +1887,30 @@ function renderBR_modern(theme){
   <div style="font-family:'Inter', sans-serif; display:flex; min-height:297mm;">
     <div style="width:32%; background:${theme.main}; color:#fff; padding:34px 24px; text-align:center;">
       <div style="width:96px; height:96px; border-radius:50%; overflow:hidden; margin:0 auto 14px; background:rgba(255,255,255,.15); display:flex; align-items:center; justify-content:center; font-size:11px;">
-        ${state.photo?`<img src="${state.photo}" style="width:100%; height:100%; object-fit:cover;">`:'Foto'}
+        ${state.photo?`<img src="${state.photo}" style="width:100%; height:100%; object-fit:cover;">`:'Photo'}
       </div>
       <div style="font-size:19px; font-weight:700; font-family:'Fraunces',serif;">${esc(fullName())}</div>
       <div style="font-size:12px; opacity:.85; margin-top:4px; margin-bottom:20px;">${esc(p.jobTitle)}</div>
 
-      <div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin-bottom:8px;">CONTATO</div>
+      <div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin-bottom:8px;">CONTACT</div>
       <div style="text-align:start; font-size:11px; line-height:1.9; margin-bottom:20px;">
         ${contactLine([['📧',p.email],['📞',p.phone],['📍',p.city]], '<br>')}
       </div>
-      ${dados.length?`<div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin-bottom:8px;">DADOS PESSOAIS</div>
+      ${dados.length?`<div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin-bottom:8px;">PERSONAL DETAILS</div>
       <div style="text-align:start; font-size:11px; line-height:1.9; margin-bottom:20px;">${dados.join('<br>')}</div>`:''}
 
-      <div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin-bottom:8px;">HABILIDADES</div>
+      <div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin-bottom:8px;">SKILLS</div>
       <div style="text-align:start; font-size:11px; line-height:2;">${state.skills.map(s=>`<div>• ${esc(s)}</div>`).join('')}</div>
 
-      <div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin:20px 0 8px;">IDIOMAS</div>
+      <div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin:20px 0 8px;">LANGUAGES</div>
       <div style="text-align:start; font-size:11px; line-height:1.9;">${state.languages.map(l=>`<div>${esc(l.name)} — ${esc(l.level)}</div>`).join('')}</div>
     </div>
     <div style="flex:1; padding:34px 30px; color:#1c1c1c;">
       ${state.summary?`<div style="margin-bottom:16px;">
-        <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:6px;">RESUMO PROFISSIONAL</div>
+        <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:6px;">PROFESSIONAL SUMMARY</div>
         <div style="font-size:12.5px; line-height:1.55;">${esc(state.summary)}</div>
       </div>`:''}
-      <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:10px;">EXPERIÊNCIA PROFISSIONAL</div>
+      <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:10px;">PROFESSIONAL EXPERIENCE</div>
       ${state.experience.map(job=>`
         <div style="margin-bottom:14px; border-inline-start:2px solid ${theme.soft}; padding-inline-start:12px;">
           <div style="font-weight:700; font-size:13px;">${esc(job.title)}, ${esc(job.company)}</div>
@@ -1917,11 +1919,11 @@ function renderBR_modern(theme){
             ${job.bullets.map(b=>`<li>${esc(b)}</li>`).join('')}
           </ul>
         </div>`).join('')}
-      <div style="font-size:13px; font-weight:700; color:${theme.main}; margin:16px 0 8px;">FORMAÇÃO ACADÊMICA</div>
+      <div style="font-size:13px; font-weight:700; color:${theme.main}; margin:16px 0 8px;">EDUCATION</div>
       ${state.education.map(ed=>`
         <div style="font-size:12.5px; margin-bottom:6px;"><b>${esc(ed.degree)}</b>, ${esc(ed.school)} — ${esc(ed.location)} (${esc(ed.start)}–${esc(ed.end)})</div>`).join('')}
       ${state.interests.length?`<div style="margin-top:14px;">
-        <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:6px;">INTERESSES</div>
+        <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:6px;">INTERESTS</div>
         <div style="font-size:12px; line-height:1.6;">${state.interests.map(esc).join(' · ')}</div>
       </div>`:''}
     </div>
@@ -1943,12 +1945,12 @@ function renderSE_classic(theme){
     <hr style="border:none; border-top:1.5px solid ${theme.main}; margin:14px 0 16px;">
 
     ${state.summary?`<div style="margin-bottom:16px;">
-      <div style="font-size:12px; font-weight:700; letter-spacing:1px; color:${theme.main}; margin-bottom:6px;">PROFIL</div>
+      <div style="font-size:12px; font-weight:700; letter-spacing:1px; color:${theme.main}; margin-bottom:6px;">PROFILE</div>
       <div style="font-size:12.5px; line-height:1.55; color:#2a2a2a;">${esc(state.summary)}</div>
     </div>`:''}
 
     <div style="margin-bottom:16px;">
-      <div style="font-size:12px; font-weight:700; letter-spacing:1px; color:${theme.main}; margin-bottom:8px;">ARBETSLIVSERFARENHET</div>
+      <div style="font-size:12px; font-weight:700; letter-spacing:1px; color:${theme.main}; margin-bottom:8px;">WORK EXPERIENCE</div>
       ${state.experience.map(job=>`
         <div style="margin-bottom:11px;">
           <div style="display:flex; justify-content:space-between; font-size:13px;">
@@ -1963,7 +1965,7 @@ function renderSE_classic(theme){
     </div>
 
     <div style="margin-bottom:16px;">
-      <div style="font-size:12px; font-weight:700; letter-spacing:1px; color:${theme.main}; margin-bottom:8px;">UTBILDNING</div>
+      <div style="font-size:12px; font-weight:700; letter-spacing:1px; color:${theme.main}; margin-bottom:8px;">EDUCATION</div>
       ${state.education.map(ed=>`
         <div style="display:flex; justify-content:space-between; font-size:12.5px; margin-bottom:4px;">
           <span><b>${esc(ed.degree)}</b> — ${esc(ed.school)}, ${esc(ed.location)}</span>
@@ -1973,16 +1975,16 @@ function renderSE_classic(theme){
 
     <div style="display:flex; gap:34px;">
       <div style="flex:1;">
-        <div style="font-size:12px; font-weight:700; letter-spacing:1px; color:${theme.main}; margin-bottom:6px;">KOMPETENSER</div>
+        <div style="font-size:12px; font-weight:700; letter-spacing:1px; color:${theme.main}; margin-bottom:6px;">SKILLS</div>
         <div style="font-size:12px; line-height:1.6; color:#2a2a2a;">${state.skills.map(esc).join(' · ')}</div>
       </div>
       <div style="flex:1;">
-        <div style="font-size:12px; font-weight:700; letter-spacing:1px; color:${theme.main}; margin-bottom:6px;">SPRÅK</div>
+        <div style="font-size:12px; font-weight:700; letter-spacing:1px; color:${theme.main}; margin-bottom:6px;">LANGUAGES</div>
         <div style="font-size:12px; line-height:1.6; color:#2a2a2a;">${state.languages.map(l=>`${esc(l.name)} (${esc(l.level)})`).join(' · ')}</div>
       </div>
     </div>
     ${state.interests.length?`<div style="margin-top:14px;">
-      <div style="font-size:12px; font-weight:700; letter-spacing:1px; color:${theme.main}; margin-bottom:6px;">INTRESSEN</div>
+      <div style="font-size:12px; font-weight:700; letter-spacing:1px; color:${theme.main}; margin-bottom:6px;">INTERESTS</div>
       <div style="font-size:12px; line-height:1.6;">${state.interests.map(esc).join(' · ')}</div>
     </div>`:''}
   </div>`;
@@ -1999,12 +2001,12 @@ function renderSE_modern(theme){
     </div>
     <div style="padding:26px 46px;">
       ${state.summary?`<div style="margin-bottom:16px;">
-        <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:6px;">PROFIL</div>
+        <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:6px;">PROFILE</div>
         <div style="font-size:12.5px; line-height:1.55;">${esc(state.summary)}</div>
       </div>`:''}
       <div style="display:grid; grid-template-columns:2.1fr 1fr; gap:28px;">
         <div>
-          <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:8px;">ARBETSLIVSERFARENHET</div>
+          <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:8px;">WORK EXPERIENCE</div>
           ${state.experience.map(job=>`
             <div style="margin-bottom:12px;">
               <div style="font-size:13px; font-weight:700;">${esc(job.title)}</div>
@@ -2013,14 +2015,14 @@ function renderSE_modern(theme){
                 ${job.bullets.map(b=>`<li>${esc(b)}</li>`).join('')}
               </ul>
             </div>`).join('')}
-          <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin:16px 0 8px;">UTBILDNING</div>
+          <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin:16px 0 8px;">EDUCATION</div>
           ${state.education.map(ed=>`
             <div style="font-size:12.5px; margin-bottom:6px;"><b>${esc(ed.degree)}</b> — ${esc(ed.school)}, ${esc(ed.location)} (${esc(ed.start)}–${esc(ed.end)})</div>`).join('')}
         </div>
         <div>
-          <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:8px;">KOMPETENSER</div>
+          <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:8px;">SKILLS</div>
           <div style="font-size:12px; line-height:1.8; margin-bottom:16px;">${state.skills.map(s=>`<div>${esc(s)}</div>`).join('')}</div>
-          <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:8px;">SPRÅK</div>
+          <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:8px;">LANGUAGES</div>
           <div style="font-size:12px; line-height:1.8;">${state.languages.map(l=>`<div>${esc(l.name)} — ${esc(l.level)}</div>`).join('')}</div>
         </div>
       </div>
@@ -2033,10 +2035,10 @@ function renderIT_classic(theme){
   const p = state.personal;
   const infoRows = [
     ['Email', p.email],
-    ['Telefono', p.phone],
-    ['Indirizzo', p.city],
-    ['Data di nascita', p.dob],
-    ['Nazionalità', p.nationality],
+    ['Phone', p.phone],
+    ['Address', p.city],
+    ['Date of birth', p.dob],
+    ['Nationality', p.nationality],
   ].filter(r=>r[1]);
   return `
   <div style="font-family:'Inter', sans-serif; padding:0; color:#1c1c1c;">
@@ -2049,7 +2051,7 @@ function renderIT_classic(theme){
       <div style="display:flex; gap:22px; margin-bottom:20px;">
         ${state.photo?`<img src="${state.photo}" style="width:84px; height:84px; border-radius:6px; object-fit:cover; flex-shrink:0;">`:''}
         <div style="flex:1;">
-          <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">INFORMAZIONI PERSONALI</div>
+          <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">PERSONAL INFORMATION</div>
           <table style="font-size:12px; width:100%; border-collapse:collapse;">
             ${infoRows.map(([k,v])=>`<tr><td style="width:140px; color:#666; padding:2px 0;">${k}</td><td>${esc(v)}</td></tr>`).join('')}
           </table>
@@ -2057,12 +2059,12 @@ function renderIT_classic(theme){
       </div>
 
       ${state.summary?`<div style="margin-bottom:18px;">
-        <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">PROFILO PROFESSIONALE</div>
+        <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">PROFESSIONAL PROFILE</div>
         <div style="font-size:12.5px; line-height:1.6;">${esc(state.summary)}</div>
       </div>`:''}
 
       <div style="margin-bottom:18px;">
-        <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">ESPERIENZA LAVORATIVA</div>
+        <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">WORK EXPERIENCE</div>
         ${state.experience.map(job=>`
           <div style="margin-bottom:12px;">
             <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:700;">
@@ -2077,7 +2079,7 @@ function renderIT_classic(theme){
       </div>
 
       <div style="margin-bottom:18px;">
-        <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">ISTRUZIONE E FORMAZIONE</div>
+        <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">EDUCATION AND TRAINING</div>
         ${state.education.map(ed=>`
           <div style="display:flex; justify-content:space-between; font-size:12.5px; margin-bottom:4px;">
             <span><b>${esc(ed.degree)}</b>, ${esc(ed.school)} — ${esc(ed.location)}</span>
@@ -2085,14 +2087,14 @@ function renderIT_classic(theme){
           </div>`).join('')}
       </div>
 
-      <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">COMPETENZE PERSONALI</div>
+      <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">PERSONAL SKILLS</div>
       <div style="display:flex; gap:30px;">
         <div style="flex:1;">
-          <div style="font-size:11px; font-weight:700; color:#666; margin-bottom:4px;">Competenze professionali</div>
+          <div style="font-size:11px; font-weight:700; color:#666; margin-bottom:4px;">Professional skills</div>
           <div style="font-size:12px; line-height:1.6;">${state.skills.map(esc).join(' · ')}</div>
         </div>
         <div style="flex:1;">
-          <div style="font-size:11px; font-weight:700; color:#666; margin-bottom:4px;">Competenze linguistiche</div>
+          <div style="font-size:11px; font-weight:700; color:#666; margin-bottom:4px;">Language skills</div>
           <div style="font-size:12px; line-height:1.6;">${state.languages.map(l=>`${esc(l.name)}: ${esc(l.level)}`).join(' · ')}</div>
         </div>
       </div>
@@ -2106,30 +2108,30 @@ function renderIT_modern(theme){
   <div style="font-family:'Inter', sans-serif; display:flex; min-height:297mm;">
     <div style="width:32%; background:${theme.main}; color:#fff; padding:34px 24px; text-align:center;">
       <div style="width:96px; height:96px; border-radius:50%; overflow:hidden; margin:0 auto 14px; background:rgba(255,255,255,.15); display:flex; align-items:center; justify-content:center; font-size:11px;">
-        ${state.photo?`<img src="${state.photo}" style="width:100%; height:100%; object-fit:cover;">`:'Foto'}
+        ${state.photo?`<img src="${state.photo}" style="width:100%; height:100%; object-fit:cover;">`:'Photo'}
       </div>
       <div style="font-size:19px; font-weight:700; font-family:'Fraunces',serif;">${esc(fullName())}</div>
       <div style="font-size:12px; opacity:.85; margin-top:4px; margin-bottom:20px;">${esc(p.jobTitle)}</div>
 
-      <div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin-bottom:8px;">CONTATTI</div>
+      <div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin-bottom:8px;">CONTACT</div>
       <div style="text-align:start; font-size:11px; line-height:1.9; margin-bottom:20px;">
         ${contactLine([['📧',p.email],['📞',p.phone],['📍',p.city]], '<br>')}
       </div>
-      ${p.dob||p.nationality?`<div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin-bottom:8px;">DATI PERSONALI</div>
+      ${p.dob||p.nationality?`<div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin-bottom:8px;">PERSONAL DETAILS</div>
       <div style="text-align:start; font-size:11px; line-height:1.9; margin-bottom:20px;">${[p.dob,p.nationality].filter(Boolean).map(esc).join('<br>')}</div>`:''}
 
-      <div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin-bottom:8px;">COMPETENZE</div>
+      <div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin-bottom:8px;">SKILLS</div>
       <div style="text-align:start; font-size:11px; line-height:2;">${state.skills.map(s=>`<div>• ${esc(s)}</div>`).join('')}</div>
 
-      <div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin:20px 0 8px;">LINGUE</div>
+      <div style="text-align:start; font-size:11px; letter-spacing:1px; opacity:.7; margin:20px 0 8px;">LANGUAGES</div>
       <div style="text-align:start; font-size:11px; line-height:1.9;">${state.languages.map(l=>`<div>${esc(l.name)} — ${esc(l.level)}</div>`).join('')}</div>
     </div>
     <div style="flex:1; padding:34px 30px; color:#1c1c1c;">
       ${state.summary?`<div style="margin-bottom:16px;">
-        <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:6px;">PROFILO PROFESSIONALE</div>
+        <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:6px;">PROFESSIONAL PROFILE</div>
         <div style="font-size:12.5px; line-height:1.55;">${esc(state.summary)}</div>
       </div>`:''}
-      <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:10px;">ESPERIENZA LAVORATIVA</div>
+      <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:10px;">WORK EXPERIENCE</div>
       ${state.experience.map(job=>`
         <div style="margin-bottom:14px; border-inline-start:2px solid ${theme.soft}; padding-inline-start:12px;">
           <div style="font-weight:700; font-size:13px;">${esc(job.title)}, ${esc(job.company)}</div>
@@ -2138,7 +2140,7 @@ function renderIT_modern(theme){
             ${job.bullets.map(b=>`<li>${esc(b)}</li>`).join('')}
           </ul>
         </div>`).join('')}
-      <div style="font-size:13px; font-weight:700; color:${theme.main}; margin:16px 0 8px;">ISTRUZIONE E FORMAZIONE</div>
+      <div style="font-size:13px; font-weight:700; color:${theme.main}; margin:16px 0 8px;">EDUCATION AND TRAINING</div>
       ${state.education.map(ed=>`
         <div style="font-size:12.5px; margin-bottom:6px;"><b>${esc(ed.degree)}</b>, ${esc(ed.school)} — ${esc(ed.location)} (${esc(ed.start)}–${esc(ed.end)})</div>`).join('')}
     </div>
@@ -2279,45 +2281,45 @@ function renderIN_modern(theme){
 function renderCN_classic(theme){
   const p = state.personal;
   const civilRows = [
-    ['出生日期', p.dob],
-    ['国籍', p.nationality],
-    ['婚姻状况', p.maritalStatus],
+    ['Date of birth', p.dob],
+    ['Nationality', p.nationality],
+    ['Marital status', p.maritalStatus],
   ].filter(r=>r[1]);
   return `
   <div style="font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif; padding:38px 46px; color:#1c1c1c;">
     <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid ${theme.main}; padding-bottom:16px; margin-bottom:18px;">
       <div>
-        <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">个人简历</div>
+        <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">CURRICULUM VITAE</div>
         <div style="font-size:24px; font-weight:700;">${esc(fullName())}</div>
         <div style="font-size:13px; color:#444; margin-top:2px;">${esc(p.jobTitle)}</div>
       </div>
       <div style="width:76px; height:76px; border-radius:4px; overflow:hidden; background:${theme.soft}; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:10px; color:#888;">
-        ${state.photo?`<img src="${state.photo}" style="width:100%; height:100%; object-fit:cover;">`:'照片'}
+        ${state.photo?`<img src="${state.photo}" style="width:100%; height:100%; object-fit:cover;">`:'Photo'}
       </div>
     </div>
 
     <div style="margin-bottom:18px;">
-      <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">个人信息</div>
+      <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">PERSONAL DETAILS</div>
       <table style="font-size:12px; width:100%; border-collapse:collapse;">
-        <tr><td style="width:110px; color:#666; padding:2px 0;">📧 邮箱</td><td>${esc(p.email)}</td></tr>
-        <tr><td style="color:#666; padding:2px 0;">📞 电话</td><td>${esc(p.phone)}</td></tr>
-        <tr><td style="color:#666; padding:2px 0;">📍 城市</td><td>${esc(p.city)}</td></tr>
+        <tr><td style="width:110px; color:#666; padding:2px 0;">📧 Email</td><td>${esc(p.email)}</td></tr>
+        <tr><td style="color:#666; padding:2px 0;">📞 Phone</td><td>${esc(p.phone)}</td></tr>
+        <tr><td style="color:#666; padding:2px 0;">📍 City</td><td>${esc(p.city)}</td></tr>
         ${civilRows.map(([k,v])=>`<tr><td style="color:#666; padding:2px 0;">${k}</td><td>${esc(v)}</td></tr>`).join('')}
       </table>
     </div>
 
     ${state.summary?`<div style="margin-bottom:18px;">
-      <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">个人简介</div>
+      <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">PROFESSIONAL SUMMARY</div>
       <div style="font-size:12.5px; line-height:1.7;">${esc(state.summary)}</div>
     </div>`:''}
 
     <div style="margin-bottom:18px;">
-      <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">工作经历</div>
+      <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">WORK EXPERIENCE</div>
       ${state.experience.map(job=>`
         <div style="display:flex; gap:16px; margin-bottom:12px;">
           <div style="width:110px; flex-shrink:0; font-size:11.5px; color:#555;">${esc(job.start)} – ${esc(job.end)}</div>
           <div>
-            <div style="font-size:13px; font-weight:700;">${esc(job.title)}，${esc(job.company)}</div>
+            <div style="font-size:13px; font-weight:700;">${esc(job.title)}, ${esc(job.company)}</div>
             <div style="font-size:11.5px; color:#666; margin-bottom:4px;">${esc(job.location)}</div>
             <ul style="margin:0; padding-inline-start:18px; font-size:12px; line-height:1.7;">
               ${job.bullets.map(b=>`<li>${esc(b)}</li>`).join('')}
@@ -2327,26 +2329,26 @@ function renderCN_classic(theme){
     </div>
 
     <div style="margin-bottom:18px;">
-      <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">教育背景</div>
+      <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:8px;">EDUCATION</div>
       ${state.education.map(ed=>`
         <div style="display:flex; gap:16px; margin-bottom:8px;">
           <div style="width:110px; flex-shrink:0; font-size:11.5px; color:#555;">${esc(ed.start)} – ${esc(ed.end)}</div>
-          <div style="font-size:12.5px;"><b>${esc(ed.degree)}</b>，${esc(ed.school)} — ${esc(ed.location)}</div>
+          <div style="font-size:12.5px;"><b>${esc(ed.degree)}</b>, ${esc(ed.school)} — ${esc(ed.location)}</div>
         </div>`).join('')}
     </div>
 
     <div style="display:flex; gap:34px;">
       <div style="flex:1;">
-        <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">技能</div>
+        <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">SKILLS</div>
         <div style="font-size:12px; line-height:1.7;">${state.skills.map(esc).join(' · ')}</div>
       </div>
       <div style="flex:1;">
-        <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">语言能力</div>
-        <div style="font-size:12px; line-height:1.7;">${state.languages.map(l=>`${esc(l.name)}：${esc(l.level)}`).join(' · ')}</div>
+        <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">LANGUAGES</div>
+        <div style="font-size:12px; line-height:1.7;">${state.languages.map(l=>`${esc(l.name)}: ${esc(l.level)}`).join(' · ')}</div>
       </div>
     </div>
     ${state.certifications.length?`<div style="margin-top:14px;">
-      <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">证书</div>
+      <div style="font-size:12px; font-weight:700; letter-spacing:.5px; color:${theme.main}; margin-bottom:6px;">CERTIFICATIONS</div>
       <div style="font-size:12px; line-height:1.7;">${state.certifications.map(esc).join(' · ')}</div>
     </div>`:''}
   </div>`;
@@ -2355,49 +2357,49 @@ function renderCN_classic(theme){
 function renderCN_modern(theme){
   const p = state.personal;
   const civil = [
-    p.dob?`出生日期：${esc(p.dob)}`:'',
-    p.nationality?`国籍：${esc(p.nationality)}`:'',
-    p.maritalStatus?`婚姻状况：${esc(p.maritalStatus)}`:''
+    p.dob?`Date of birth: ${esc(p.dob)}`:'',
+    p.nationality?`Nationality: ${esc(p.nationality)}`:'',
+    p.maritalStatus?`Marital status: ${esc(p.maritalStatus)}`:''
   ].filter(Boolean);
   return `
   <div style="font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif; display:flex; min-height:297mm;">
     <div style="width:32%; background:${theme.main}; color:#fff; padding:34px 24px; text-align:center;">
       <div style="width:96px; height:96px; border-radius:50%; overflow:hidden; margin:0 auto 14px; background:rgba(255,255,255,.15); display:flex; align-items:center; justify-content:center; font-size:11px;">
-        ${state.photo?`<img src="${state.photo}" style="width:100%; height:100%; object-fit:cover;">`:'照片'}
+        ${state.photo?`<img src="${state.photo}" style="width:100%; height:100%; object-fit:cover;">`:'Photo'}
       </div>
       <div style="font-size:19px; font-weight:700;">${esc(fullName())}</div>
       <div style="font-size:12px; opacity:.85; margin-top:4px; margin-bottom:20px;">${esc(p.jobTitle)}</div>
 
-      <div style="text-align:start; font-size:11px; letter-spacing:.5px; opacity:.7; margin-bottom:8px;">联系方式</div>
+      <div style="text-align:start; font-size:11px; letter-spacing:.5px; opacity:.7; margin-bottom:8px;">CONTACT</div>
       <div style="text-align:start; font-size:11px; line-height:1.9; margin-bottom:20px;">
         ${contactLine([['📧',p.email],['📞',p.phone],['📍',p.city]], '<br>')}
       </div>
-      ${civil.length?`<div style="text-align:start; font-size:11px; letter-spacing:.5px; opacity:.7; margin-bottom:8px;">个人信息</div>
+      ${civil.length?`<div style="text-align:start; font-size:11px; letter-spacing:.5px; opacity:.7; margin-bottom:8px;">PERSONAL DETAILS</div>
       <div style="text-align:start; font-size:11px; line-height:1.9; margin-bottom:20px;">${civil.join('<br>')}</div>`:''}
 
-      <div style="text-align:start; font-size:11px; letter-spacing:.5px; opacity:.7; margin-bottom:8px;">技能</div>
+      <div style="text-align:start; font-size:11px; letter-spacing:.5px; opacity:.7; margin-bottom:8px;">SKILLS</div>
       <div style="text-align:start; font-size:11px; line-height:2;">${state.skills.map(s=>`<div>• ${esc(s)}</div>`).join('')}</div>
 
-      <div style="text-align:start; font-size:11px; letter-spacing:.5px; opacity:.7; margin:20px 0 8px;">语言能力</div>
+      <div style="text-align:start; font-size:11px; letter-spacing:.5px; opacity:.7; margin:20px 0 8px;">LANGUAGES</div>
       <div style="text-align:start; font-size:11px; line-height:1.9;">${state.languages.map(l=>`<div>${esc(l.name)} — ${esc(l.level)}</div>`).join('')}</div>
     </div>
     <div style="flex:1; padding:34px 30px; color:#1c1c1c;">
       ${state.summary?`<div style="margin-bottom:16px;">
-        <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:6px;">个人简介</div>
+        <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:6px;">PROFESSIONAL SUMMARY</div>
         <div style="font-size:12.5px; line-height:1.65;">${esc(state.summary)}</div>
       </div>`:''}
-      <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:10px;">工作经历</div>
+      <div style="font-size:13px; font-weight:700; color:${theme.main}; margin-bottom:10px;">WORK EXPERIENCE</div>
       ${state.experience.map(job=>`
         <div style="margin-bottom:14px; border-inline-start:2px solid ${theme.soft}; padding-inline-start:12px;">
-          <div style="font-weight:700; font-size:13px;">${esc(job.title)}，${esc(job.company)}</div>
+          <div style="font-weight:700; font-size:13px;">${esc(job.title)}, ${esc(job.company)}</div>
           <div style="font-size:11.5px; color:#555; margin-bottom:4px;">${esc(job.location)} · ${esc(job.start)}–${esc(job.end)}</div>
           <ul style="margin:0; padding-inline-start:16px; font-size:12px; line-height:1.6;">
             ${job.bullets.map(b=>`<li>${esc(b)}</li>`).join('')}
           </ul>
         </div>`).join('')}
-      <div style="font-size:13px; font-weight:700; color:${theme.main}; margin:16px 0 8px;">教育背景</div>
+      <div style="font-size:13px; font-weight:700; color:${theme.main}; margin:16px 0 8px;">EDUCATION</div>
       ${state.education.map(ed=>`
-        <div style="font-size:12.5px; margin-bottom:6px;"><b>${esc(ed.degree)}</b>，${esc(ed.school)} — ${esc(ed.location)} (${esc(ed.start)}–${esc(ed.end)})</div>`).join('')}
+        <div style="font-size:12.5px; margin-bottom:6px;"><b>${esc(ed.degree)}</b>, ${esc(ed.school)} — ${esc(ed.location)} (${esc(ed.start)}–${esc(ed.end)})</div>`).join('')}
     </div>
   </div>`;
 }
@@ -2407,71 +2409,71 @@ function renderJP_classic(theme){
   const p = state.personal;
   const historyRows = [];
   state.education.forEach(ed=>{
-    historyRows.push([esc(ed.start), '', `${esc(ed.school)} ${esc(ed.degree)} 入学`]);
-    historyRows.push([esc(ed.end), '', `${esc(ed.school)} ${esc(ed.degree)} 卒業`]);
+    historyRows.push([esc(ed.start), '', `${esc(ed.school)}, ${esc(ed.degree)} — Enrolled`]);
+    historyRows.push([esc(ed.end), '', `${esc(ed.school)}, ${esc(ed.degree)} — Graduated`]);
   });
   state.experience.forEach(job=>{
-    historyRows.push([esc(job.start), '', `${esc(job.company)} 入社`]);
-    if(!job.current) historyRows.push([esc(job.end), '', `${esc(job.company)} 退社`]);
+    historyRows.push([esc(job.start), '', `${esc(job.company)} — Joined`]);
+    if(!job.current) historyRows.push([esc(job.end), '', `${esc(job.company)} — Left`]);
   });
   return `
   <div style="font-family:'Noto Sans JP','Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif; padding:30px 40px; color:#1c1c1c; font-size:11.5px;">
-    <div style="text-align:center; font-size:18px; font-weight:700; letter-spacing:4px; margin-bottom:14px;">履歴書</div>
+    <div style="text-align:center; font-size:18px; font-weight:700; letter-spacing:4px; margin-bottom:14px;">CURRICULUM VITAE</div>
 
     <table style="width:100%; border-collapse:collapse; border:1.5px solid #333; margin-bottom:14px;">
       <tr>
         <td style="border:1px solid #999; padding:8px 10px; vertical-align:top;">
-          <div style="font-size:10px; color:#666; margin-bottom:4px;">氏名</div>
+          <div style="font-size:10px; color:#666; margin-bottom:4px;">Name</div>
           <div style="font-size:17px; font-weight:700;">${esc(fullName())}</div>
         </td>
         <td rowspan="4" style="border:1px solid #999; width:90px; text-align:center; vertical-align:middle; font-size:9px; color:#999;">
-          ${state.photo?`<img src="${state.photo}" style="width:70px; height:90px; object-fit:cover;">`:'写真<br>(3×4cm)'}
+          ${state.photo?`<img src="${state.photo}" style="width:70px; height:90px; object-fit:cover;">`:'Photo<br>(3×4cm)'}
         </td>
       </tr>
       <tr>
         <td style="border:1px solid #999; padding:6px 10px;">
-          <div style="font-size:10px; color:#666;">生年月日</div>
+          <div style="font-size:10px; color:#666;">Date of Birth</div>
           <div>${esc(p.dob)||'—'}</div>
         </td>
       </tr>
       <tr>
         <td style="border:1px solid #999; padding:6px 10px;">
-          <div style="font-size:10px; color:#666;">現住所</div>
+          <div style="font-size:10px; color:#666;">Address</div>
           <div>${esc(p.city)}</div>
         </td>
       </tr>
       <tr>
         <td style="border:1px solid #999; padding:6px 10px;">
-          <div style="font-size:10px; color:#666;">電話 / Eメール</div>
-          <div>${esc(p.phone)} ／ ${esc(p.email)}</div>
+          <div style="font-size:10px; color:#666;">Phone / Email</div>
+          <div>${esc(p.phone)} / ${esc(p.email)}</div>
         </td>
       </tr>
     </table>
 
     <table style="width:100%; border-collapse:collapse; border:1.5px solid #333; margin-bottom:14px;">
       <tr style="background:${theme.soft};">
-        <td style="border:1px solid #999; padding:5px 8px; width:70px; text-align:center; font-weight:700; color:${theme.main};">年</td>
-        <td style="border:1px solid #999; padding:5px 8px; width:40px; text-align:center; font-weight:700; color:${theme.main};">月</td>
-        <td style="border:1px solid #999; padding:5px 8px; font-weight:700; color:${theme.main};">学歴・職歴</td>
+        <td style="border:1px solid #999; padding:5px 8px; width:70px; text-align:center; font-weight:700; color:${theme.main}; font-size:10px;">Year</td>
+        <td style="border:1px solid #999; padding:5px 8px; width:55px; text-align:center; font-weight:700; color:${theme.main}; font-size:10px;">Month</td>
+        <td style="border:1px solid #999; padding:5px 8px; font-weight:700; color:${theme.main};">Education / Work History</td>
       </tr>
       ${historyRows.map(([y,m,ev])=>`
         <tr><td style="border:1px solid #999; padding:5px 8px; text-align:center;">${y}</td><td style="border:1px solid #999; padding:5px 8px;"></td><td style="border:1px solid #999; padding:5px 8px;">${ev}</td></tr>`).join('')}
-      <tr><td style="border:1px solid #999; padding:5px 8px;"></td><td style="border:1px solid #999; padding:5px 8px;"></td><td style="border:1px solid #999; padding:5px 8px; text-align:right; color:#999;">以上</td></tr>
+      <tr><td style="border:1px solid #999; padding:5px 8px;"></td><td style="border:1px solid #999; padding:5px 8px;"></td><td style="border:1px solid #999; padding:5px 8px; text-align:right; color:#999;">End</td></tr>
     </table>
 
     ${state.certifications.length?`<table style="width:100%; border-collapse:collapse; border:1.5px solid #333; margin-bottom:14px;">
-      <tr style="background:${theme.soft};"><td style="border:1px solid #999; padding:5px 8px; font-weight:700; color:${theme.main};">免許・資格</td></tr>
-      <tr><td style="border:1px solid #999; padding:8px;">${state.certifications.map(esc).join('　/　')}</td></tr>
+      <tr style="background:${theme.soft};"><td style="border:1px solid #999; padding:5px 8px; font-weight:700; color:${theme.main};">Licenses / Qualifications</td></tr>
+      <tr><td style="border:1px solid #999; padding:8px;">${state.certifications.map(esc).join(' / ')}</td></tr>
     </table>`:''}
 
     <table style="width:100%; border-collapse:collapse; border:1.5px solid #333; margin-bottom:14px;">
-      <tr style="background:${theme.soft};"><td style="border:1px solid #999; padding:5px 8px; font-weight:700; color:${theme.main};">志望動機・自己PR</td></tr>
+      <tr style="background:${theme.soft};"><td style="border:1px solid #999; padding:5px 8px; font-weight:700; color:${theme.main};">Motivation / Self-PR</td></tr>
       <tr><td style="border:1px solid #999; padding:10px; line-height:1.7;">${esc(state.summary)||'&nbsp;'}</td></tr>
     </table>
 
     <table style="width:100%; border-collapse:collapse; border:1.5px solid #333;">
-      <tr style="background:${theme.soft};"><td style="border:1px solid #999; padding:5px 8px; font-weight:700; color:${theme.main};">本人希望記入欄</td></tr>
-      <tr><td style="border:1px solid #999; padding:10px; line-height:1.7;">${[...state.skills, ...state.languages.map(l=>`${l.name}（${l.level}）`)].map(esc).join('　/　')||'特になし'}</td></tr>
+      <tr style="background:${theme.soft};"><td style="border:1px solid #999; padding:5px 8px; font-weight:700; color:${theme.main};">Additional Notes</td></tr>
+      <tr><td style="border:1px solid #999; padding:10px; line-height:1.7;">${[...state.skills, ...state.languages.map(l=>`${l.name} (${l.level})`)].map(esc).join(' / ')||'None'}</td></tr>
     </table>
   </div>`;
 }
@@ -2482,25 +2484,25 @@ function renderJP_modern(theme){
   <div style="font-family:'Noto Sans JP','Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif; padding:38px 46px; color:#1c1c1c;">
     <div style="border-bottom:3px solid ${theme.main}; padding-bottom:14px; margin-bottom:18px; display:flex; justify-content:space-between; align-items:center;">
       <div>
-        <div style="font-size:11px; letter-spacing:2px; color:${theme.main}; margin-bottom:4px;">職務経歴書</div>
+        <div style="font-size:11px; letter-spacing:2px; color:${theme.main}; margin-bottom:4px;">CURRICULUM VITAE</div>
         <div style="font-size:24px; font-weight:700;">${esc(fullName())}</div>
         <div style="font-size:12.5px; color:#555; margin-top:2px;">${esc(p.jobTitle)}</div>
-        <div style="font-size:11px; color:#666; margin-top:6px;">${contactLine([['📧',p.email],['📞',p.phone],['📍',p.city]], '　｜　')}</div>
+        <div style="font-size:11px; color:#666; margin-top:6px;">${contactLine([['📧',p.email],['📞',p.phone],['📍',p.city]], '  |  ')}</div>
       </div>
       ${state.photo?`<img src="${state.photo}" style="width:76px; height:96px; object-fit:cover; border:1px solid #ccc;">`:''}
     </div>
 
     ${state.summary?`<div style="margin-bottom:18px;">
-      <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:6px;">職務要約</div>
+      <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:6px;">PROFESSIONAL SUMMARY</div>
       <div style="font-size:12.5px; line-height:1.7;">${esc(state.summary)}</div>
     </div>`:''}
 
     <div style="margin-bottom:18px;">
-      <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:8px;">職務経歴</div>
+      <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:8px;">WORK EXPERIENCE</div>
       ${state.experience.map(job=>`
         <div style="margin-bottom:12px;">
           <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:700;">
-            <span>${esc(job.company)}　${esc(job.title)}</span>
+            <span>${esc(job.title)}, ${esc(job.company)}</span>
             <span style="font-size:11.5px; color:#555; font-weight:400;">${esc(job.start)} – ${esc(job.end)}</span>
           </div>
           <div style="font-size:11.5px; color:#666; margin-bottom:4px;">${esc(job.location)}</div>
@@ -2511,27 +2513,27 @@ function renderJP_modern(theme){
     </div>
 
     <div style="margin-bottom:18px;">
-      <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:8px;">学歴</div>
+      <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:8px;">EDUCATION</div>
       ${state.education.map(ed=>`
         <div style="display:flex; justify-content:space-between; font-size:12.5px; margin-bottom:4px;">
-          <span><b>${esc(ed.school)}</b>　${esc(ed.degree)}</span>
+          <span><b>${esc(ed.degree)}</b>, ${esc(ed.school)}</span>
           <span style="color:#555; font-size:11.5px;">${esc(ed.start)}–${esc(ed.end)}</span>
         </div>`).join('')}
     </div>
 
     ${state.certifications.length?`<div style="margin-bottom:18px;">
-      <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:6px;">資格・免許</div>
-      <div style="font-size:12px; line-height:1.7;">${state.certifications.map(esc).join('　/　')}</div>
+      <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:6px;">CERTIFICATIONS</div>
+      <div style="font-size:12px; line-height:1.7;">${state.certifications.map(esc).join(' / ')}</div>
     </div>`:''}
 
     <div style="display:flex; gap:34px;">
       <div style="flex:1;">
-        <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:6px;">活かせるスキル</div>
+        <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:6px;">SKILLS</div>
         <div style="font-size:12px; line-height:1.7;">${state.skills.map(esc).join(' · ')}</div>
       </div>
       <div style="flex:1;">
-        <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:6px;">語学</div>
-        <div style="font-size:12px; line-height:1.7;">${state.languages.map(l=>`${esc(l.name)}：${esc(l.level)}`).join(' · ')}</div>
+        <div style="font-size:12.5px; font-weight:700; color:${theme.main}; margin-bottom:6px;">LANGUAGES</div>
+        <div style="font-size:12px; line-height:1.7;">${state.languages.map(l=>`${esc(l.name)}: ${esc(l.level)}`).join(' · ')}</div>
       </div>
     </div>
   </div>`;
@@ -2548,7 +2550,7 @@ function renderCoverLetter(theme){
 function renderCoverLetterClassic(theme){
   const p = state.personal;
   const cl = state.coverLetter;
-  const locale = LETTER_LOCALE[state.country] || LETTER_LOCALE.us;
+  const locale = LETTER_LOCALE.us; // salutation/sign-off always in English, regardless of the selected country
   return `
   <div style="font-family:'Source Serif 4', Georgia, serif; padding:52px 58px; color:#1c1c1c; min-height:297mm;">
     <div style="margin-bottom:10px;">
@@ -2575,7 +2577,7 @@ function renderCoverLetterClassic(theme){
 function renderCoverLetterModern(theme){
   const p = state.personal;
   const cl = state.coverLetter;
-  const locale = LETTER_LOCALE[state.country] || LETTER_LOCALE.us;
+  const locale = LETTER_LOCALE.us; // salutation/sign-off always in English, regardless of the selected country
   return `
   <div style="font-family:'Inter', sans-serif; min-height:297mm; color:#1c1c1c;">
     <div style="background:${theme.main}; color:#fff; padding:40px 58px;">
@@ -2603,7 +2605,7 @@ function renderCoverLetterModern(theme){
 function renderCoverLetterMinimal(theme){
   const p = state.personal;
   const cl = state.coverLetter;
-  const locale = LETTER_LOCALE[state.country] || LETTER_LOCALE.us;
+  const locale = LETTER_LOCALE.us; // salutation/sign-off always in English, regardless of the selected country
   return `
   <div style="font-family:'Inter', sans-serif; padding:64px 68px; color:#2a2a2a; min-height:297mm;">
     <div style="font-family:'Fraunces',serif; font-size:23px; font-weight:500;">${esc(fullName())}</div>
@@ -2837,7 +2839,7 @@ function render(){
     ? renderCoverLetter(theme)
     : RENDERERS[state.country][state.style[state.country]](theme);
   document.getElementById('paper').innerHTML = html;
-  document.getElementById('paper').setAttribute('dir', state.country === 'ar' ? 'rtl' : 'ltr');
+  document.getElementById('paper').setAttribute('dir', 'ltr'); // CV text is always English regardless of country
 }
 
 /* =========================================================
@@ -3247,7 +3249,7 @@ function buildWordLetterClassic(){
   const { Document, Paragraph, TextRun } = docx;
   const p = state.personal;
   const cl = state.coverLetter;
-  const locale = LETTER_LOCALE[state.country] || LETTER_LOCALE.us;
+  const locale = LETTER_LOCALE.us; // salutation/sign-off always in English, regardless of the selected country
   const children = [];
 
   children.push(new Paragraph({ spacing:{ after:20 }, children:[ new TextRun({ text: fullName().toUpperCase() || 'YOUR NAME', bold:true, size:32 }) ] }));
@@ -3281,7 +3283,7 @@ function buildWordLetterModern(){
   const { Document, Paragraph, TextRun, ShadingType } = docx;
   const p = state.personal;
   const cl = state.coverLetter;
-  const locale = LETTER_LOCALE[state.country] || LETTER_LOCALE.us;
+  const locale = LETTER_LOCALE.us; // salutation/sign-off always in English, regardless of the selected country
   const theme = THEMES[state.theme];
   const band = { type: ShadingType.CLEAR, fill: hexColor(theme.main), color:'auto' };
   const children = [];
@@ -3318,7 +3320,7 @@ function buildWordLetterMinimal(){
   const { Document, Paragraph, TextRun, BorderStyle } = docx;
   const p = state.personal;
   const cl = state.coverLetter;
-  const locale = LETTER_LOCALE[state.country] || LETTER_LOCALE.us;
+  const locale = LETTER_LOCALE.us; // salutation/sign-off always in English, regardless of the selected country
   const theme = THEMES[state.theme];
   const children = [];
 
