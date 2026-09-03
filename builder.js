@@ -164,6 +164,7 @@ let dobPickerOpen = false;
 let dobViewYear = null;
 let dobViewMonth = null; // 0-11
 let dobPendingISO = null; // staged selection while the picker is open, applied on OK
+let dobYearPickerOpen = false; // custom striped year dropdown
 const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
 function parseDobISO(iso){
@@ -367,6 +368,7 @@ function buildDobField(){
         dobPendingISO = state.personal.dobISO || null;
       }
       dobPickerOpen = !dobPickerOpen;
+      dobYearPickerOpen = false;
       render();
     }
   }, [state.personal.dob || 'Select date…']);
@@ -379,7 +381,7 @@ function buildDobField(){
 
     const footer = el('div',{class:'dob-picker-footer'});
     footer.appendChild(el('button',{type:'button', class:'dob-picker-clear', onclick:()=>{
-      state.personal.dob=''; state.personal.dobISO=''; dobPendingISO=null; dobPickerOpen=false; refreshPreviewLive(); render();
+      state.personal.dob=''; state.personal.dobISO=''; dobPendingISO=null; dobPickerOpen=false; dobYearPickerOpen=false; refreshPreviewLive(); render();
     }}, 'Clear date'));
     footer.appendChild(el('button',{type:'button', class:'dob-picker-ok', onclick:()=>{
       if(dobPendingISO){
@@ -388,6 +390,7 @@ function buildDobField(){
         state.personal.dob = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
       }
       dobPickerOpen = false;
+      dobYearPickerOpen = false;
       refreshPreviewLive();
       render();
     }}, 'OK'));
@@ -415,21 +418,50 @@ function buildDobPickerHeader(){
   monthSelect.addEventListener('change', e=>{ dobViewMonth = +e.target.value; render(); });
   header.appendChild(monthSelect);
 
-  const yearSelect = el('select',{class:'dob-select'});
-  const nowYear = new Date().getFullYear();
-  for(let y=nowYear; y>=nowYear-100; y--){
-    const opt = el('option',{value:y}, String(y));
-    if(y===dobViewYear) opt.setAttribute('selected','selected');
-    yearSelect.appendChild(opt);
-  }
-  yearSelect.addEventListener('change', e=>{ dobViewYear = +e.target.value; render(); });
-  header.appendChild(yearSelect);
+  header.appendChild(buildDobYearField());
 
   header.appendChild(el('button',{type:'button', class:'dob-nav-btn', onclick:()=>{
     dobViewMonth++; if(dobViewMonth>11){ dobViewMonth=0; dobViewYear++; } render();
   }}, '›'));
 
   return header;
+}
+
+function buildDobYearField(){
+  const wrap = el('div',{class:'dob-year-wrap'});
+
+  const yearBtn = el('button',{
+    type:'button', class:'dob-select dob-year-btn',
+    'aria-expanded': dobYearPickerOpen ? 'true' : 'false',
+    onclick:(e)=>{ e.stopPropagation(); dobYearPickerOpen = !dobYearPickerOpen; render(); }
+  }, [String(dobViewYear), el('span',{class:'dob-year-caret'}, '▾')]);
+  wrap.appendChild(yearBtn);
+
+  if(dobYearPickerOpen){
+    const panel = el('div',{id:'dobYearPortal', class:'dob-year-panel', onclick:(e)=>e.stopPropagation()});
+    const list = el('div',{class:'dob-year-list'});
+    panel.appendChild(list);
+    document.body.appendChild(panel);
+    renderDobYearList(list);
+    positionCountryMorePanel(yearBtn, panel);
+    const activeItem = list.querySelector('.dob-year-item.active');
+    if(activeItem) activeItem.scrollIntoView({block:'center'});
+  }
+
+  return wrap;
+}
+
+function renderDobYearList(listEl){
+  listEl.innerHTML = '';
+  const nowYear = new Date().getFullYear();
+  for(let y=nowYear; y>=nowYear-100; y--){
+    const item = el('button',{
+      type:'button',
+      class:'dob-year-item' + (y===dobViewYear ? ' active' : ''),
+      onclick:()=>{ dobViewYear = y; dobYearPickerOpen = false; render(); }
+    }, String(y));
+    listEl.appendChild(item);
+  }
 }
 
 function buildDobPickerGrid(){
@@ -452,9 +484,10 @@ function buildDobPickerGrid(){
   for(let d=1; d<=daysInMonth; d++){
     const isSelected = !!selected && selected.getFullYear()===dobViewYear && selected.getMonth()===dobViewMonth && selected.getDate()===d;
     const isFuture = new Date(dobViewYear,dobViewMonth,d) > today;
+    const isToday = today.getFullYear()===dobViewYear && today.getMonth()===dobViewMonth && today.getDate()===d;
     const dayAttrs = {
       type:'button',
-      class:'dob-day' + (isSelected?' selected':'') + (isFuture?' disabled':'')
+      class:'dob-day' + (isSelected?' selected':'') + (isFuture?' disabled':'') + (isToday && !isSelected?' today':'')
     };
     if(!isFuture){
       dayAttrs.onclick = ()=>{
@@ -3646,6 +3679,7 @@ document.addEventListener('click', ()=>{
   if(countryMoreOpen){ countryMoreOpen = false; changed = true; }
   if(phoneCodeOpen){ phoneCodeOpen = false; changed = true; }
   if(dobPickerOpen){ dobPickerOpen = false; changed = true; }
+  if(dobYearPickerOpen){ dobYearPickerOpen = false; changed = true; }
   if(changed) render();
 });
 

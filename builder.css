@@ -123,28 +123,57 @@
   .dob-picker-btn.placeholder{color:var(--ink-soft);}
 
   .dob-picker-panel{
-    background:var(--white); border:1px solid var(--line); border-radius:12px;
-    box-shadow:var(--shadow); padding:10px; width:270px; max-width:88vw;
-    z-index:60; display:flex; flex-direction:column; gap:8px;
+    background:var(--white); border:1px solid var(--line); border-radius:14px;
+    box-shadow:0 2px 6px rgba(34,31,27,.08), 0 16px 40px rgba(34,31,27,.14);
+    padding:12px; width:278px; max-width:88vw;
+    z-index:60; display:flex; flex-direction:column; gap:10px;
   }
-  .dob-picker-header{display:flex; align-items:center; gap:4px;}
+  .dob-picker-header{display:flex; align-items:center; gap:6px;}
   .dob-nav-btn{
-    flex-shrink:0; width:26px; height:26px; border:1px solid var(--line); background:var(--white);
+    flex-shrink:0; width:28px; height:28px; border:1px solid var(--line); background:var(--white);
     border-radius:8px; font-size:13px; color:var(--ink-soft); display:flex; align-items:center; justify-content:center;
+    transition:border-color .15s, color .15s, background .15s;
   }
-  .dob-nav-btn:hover{border-color:var(--accent); color:var(--accent);}
+  .dob-nav-btn:hover{border-color:var(--accent); color:var(--accent); background:var(--panel);}
   .dob-select{
-    flex:1; min-width:0; padding:5px 6px; border:1px solid var(--line); border-radius:8px;
+    flex:1; min-width:0; padding:6px 8px; border:1px solid var(--line); border-radius:8px;
     background:var(--paper); font-size:12.5px; color:var(--ink);
   }
-  .dob-picker-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:2px;}
-  .dob-dow{font-size:10.5px; color:var(--ink-soft); text-align:center; padding:4px 0; font-weight:600;}
+
+  /* Custom year dropdown: striped beige/white rows for clear visual separation */
+  .dob-year-wrap{flex:1; min-width:0; position:relative;}
+  .dob-year-btn{
+    width:100%; display:flex; align-items:center; justify-content:space-between; gap:6px;
+    font-weight:600; cursor:pointer; transition:border-color .15s, background .15s;
+  }
+  .dob-year-btn:hover{border-color:var(--accent); background:var(--white);}
+  .dob-year-btn[aria-expanded="true"]{border-color:var(--accent); background:var(--white);}
+  .dob-year-caret{font-size:9px; color:var(--ink-soft); transform:translateY(1px);}
+  .dob-year-panel{
+    background:var(--white); border:1px solid var(--line); border-radius:10px;
+    box-shadow:0 2px 6px rgba(34,31,27,.08), 0 16px 40px rgba(34,31,27,.16);
+    padding:4px; width:130px; z-index:70; overflow:hidden;
+  }
+  .dob-year-list{max-height:220px; overflow-y:auto; border-radius:7px;}
+  .dob-year-item{
+    all:unset; box-sizing:border-box; display:block; width:100%; text-align:center;
+    padding:7px 0; font-size:12.5px; color:var(--ink); cursor:pointer;
+  }
+  /* Alternating stripes: beige (--panel) / white for a clear, professional scan pattern */
+  .dob-year-item:nth-child(odd){background:var(--white);}
+  .dob-year-item:nth-child(even){background:var(--panel);}
+  .dob-year-item:hover{background:var(--accent); color:var(--accent-ink);}
+  .dob-year-item.active{background:var(--ink); color:var(--accent-ink); font-weight:700;}
+
+  .dob-picker-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:3px;}
+  .dob-dow{font-size:10.5px; color:var(--ink-soft); text-align:center; padding:4px 0 6px; font-weight:700; letter-spacing:.02em; border-bottom:1px solid var(--line); margin-bottom:2px;}
   .dob-day{
-    all:unset; box-sizing:border-box; text-align:center; padding:6px 0; border-radius:8px;
-    font-size:12.5px; color:var(--ink); cursor:pointer;
+    all:unset; box-sizing:border-box; text-align:center; padding:7px 0; border-radius:8px;
+    font-size:12.5px; color:var(--ink); cursor:pointer; position:relative; transition:background .12s;
   }
   .dob-day:hover:not(.disabled):not(.empty){background:var(--panel);}
-  .dob-day.selected{background:var(--ink); color:var(--accent-ink); font-weight:600;}
+  .dob-day.today{font-weight:700; color:var(--accent); box-shadow:inset 0 0 0 1px var(--accent);}
+  .dob-day.selected{background:var(--ink); color:var(--accent-ink); font-weight:700; box-shadow:none;}
   .dob-day.disabled{color:var(--line); cursor:default;}
   .dob-day.empty{cursor:default;}
   .dob-picker-clear{
@@ -152,10 +181,10 @@
     font-size:12px; font-weight:600; padding:4px 2px;
   }
   .dob-picker-clear:hover{text-decoration:underline;}
-  .dob-picker-footer{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:2px;}
+  .dob-picker-footer{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:2px; padding-top:8px; border-top:1px solid var(--line);}
   .dob-picker-ok{
     border:1px solid var(--accent); background:var(--accent); color:var(--accent-ink);
-    padding:6px 16px; border-radius:16px; font-size:12.5px; font-weight:600;
+    padding:6px 18px; border-radius:16px; font-size:12.5px; font-weight:600;
   }
   .dob-picker-ok:hover{opacity:.9;}
 
@@ -376,6 +405,7 @@
     .rail button{width:52px; height:52px;}
     .country-tabs button, .style-tabs button, .btn-print, .btn-word, .file-btn, .country-more-item{min-height:40px;}
     .phone-code-btn, .dob-picker-btn, .dob-day{min-height:40px;}
+    .dob-year-btn, .dob-year-item{min-height:40px;}
     .swatch{width:30px; height:30px;}
   }
 
