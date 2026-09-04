@@ -429,5 +429,15 @@
     #paperWrap{transform:none !important; position:static !important; width:auto !important; height:auto !important; margin:0 !important;}
     .preview-panel, .workspace, .app{overflow:visible !important; position:static !important; transform:none !important; height:auto !important;}
     .paper{position:absolute; top:0; left:0; box-shadow:none; margin:0; width:210mm; min-height:297mm; transform:none !important;}
+    /* Browsers strip background colors/images when printing unless told
+       otherwise (Chrome's print dialog even ships with "Background graphics"
+       unchecked by default) — this is why colored sidebars (e.g. the
+       "modern" style) vanished in print/PDF even though they render fine
+       on screen. Forcing exact color adjustment keeps them. */
+    .paper, .paper *{
+      -webkit-print-color-adjust:exact !important;
+      print-color-adjust:exact !important;
+      color-adjust:exact !important;
+    }
     @page{ size:A4; margin:0; }
   }
