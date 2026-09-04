@@ -419,16 +419,23 @@
        total flow height past one A4 page and printed a blank second page.
        Remove them from flow entirely so nothing but .paper contributes height. */
     .topbar, .rail, .form-panel, .preview-toolbar{display:none !important;}
-    /* #paperWrap carries an inline zoom transform for on-screen viewing; any
-       transform on an ancestor creates a new positioning context, so without
-       neutralizing it here .paper's absolute top:0/left:0 below resolves
-       against the scaled, off-page wrapper instead of the print page —
-       producing a shrunken, cropped PDF (sometimes unreadable in strict
-       viewers). Reset the whole ancestor chain so .paper is the only
-       positioning context left. */
-    #paperWrap{transform:none !important; position:static !important; width:auto !important; height:auto !important; margin:0 !important;}
-    .preview-panel, .workspace, .app{overflow:visible !important; position:static !important; transform:none !important; height:auto !important;}
-    .paper{position:absolute; top:0; left:0; box-shadow:none; margin:0; width:210mm; min-height:297mm; transform:none !important;}
+    /* Keep .paper as a normal in-flow block instead of position:absolute.
+       An earlier version used position:absolute + collapsed every ancestor
+       to height:auto with no other in-flow children — that works fine in
+       Chromium's own DevTools print-to-PDF (what headless testing here
+       uses), but some print pipelines (notably Android's system "Save as
+       PDF", and some desktop "Print to PDF" drivers) compute the page count
+       from the document's normal flow height. With .paper taken out of flow
+       and everything else collapsed, that flow height resolves to ~0, and
+       those pipelines produced an empty/invalid file instead of just a
+       badly laid out one. Keeping .paper static and letting its own
+       min-height set the flow height avoids that failure mode entirely. */
+    .app, .workspace, .preview-panel, #paperWrap{
+      display:block !important; overflow:visible !important;
+      position:static !important; transform:none !important;
+      width:auto !important; height:auto !important; margin:0 !important; padding:0 !important;
+    }
+    .paper{position:static; box-shadow:none; margin:0 auto; width:210mm; min-height:297mm; transform:none !important;}
     /* Browsers strip background colors/images when printing unless told
        otherwise (Chrome's print dialog even ships with "Background graphics"
        unchecked by default) — this is why colored sidebars (e.g. the
