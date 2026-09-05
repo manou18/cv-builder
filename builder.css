@@ -476,14 +476,19 @@
     }
     /* Every template's root wrapper (the direct child .paper receives as
        innerHTML) carries its own hardcoded min-height:297mm — independent
-       of .paper's own sizing — so the design always fills a full A4 page
-       even when the actual text is much shorter. Left alone, that leaves
-       zero slack once the 5mm padding above is added on top, so cap it to
-       what's actually left within the page after that padding (with a
-       couple mm of rounding buffer, since browsers round the mm→px
-       conversion and can tip a mathematically-exact value a hair over).
-       !important is required to beat the inline style. */
-    .paper > div{ min-height:284mm !important; }
+       of .paper's own sizing — and since every template's background/sidebar
+       is designed to fill that full height regardless of actual text
+       length, real output lands right at this floor almost every time, not
+       just when text is genuinely long. Desktop Chromium tolerated a ~3mm
+       margin of arithmetic slack here, but real-device testing (Android
+       Chrome) showed its print engine needs meaningfully more room than
+       desktop before it stops tipping a near-boundary page into a blank
+       second one — so this is cut well below the mathematical minimum
+       (297 − 5mm − 5mm = 287mm) on purpose, trading a little unused white
+       space at the very bottom of colored sidebars for reliably staying on
+       one page across browsers/devices. !important is required to beat the
+       inline style. */
+    .paper > div{ min-height:260mm !important; }
     /* Browsers strip background colors/images when printing unless told
        otherwise (Chrome's print dialog even ships with "Background graphics"
        unchecked by default) — this is why colored sidebars (e.g. the
