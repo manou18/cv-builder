@@ -412,7 +412,15 @@
   @media print{
     body *{visibility:hidden;}
     .paper, .paper *{visibility:visible;}
-    html, body{background:#fff !important; margin:0 !important;}
+    /* transparent, not #fff: an explicit solid white fill paints a real
+       rectangle the size of body's box, and that box is a hair taller than
+       one printed page (browser rounding again) — invisible since it's
+       white-on-white paper, but it's a real painted object, so it still
+       triggers a genuine (blank) second PDF page. A blank page is already
+       white; we only need to stop the app's own beige background from
+       showing through, which "none" does just as well without painting
+       anything that can overflow. */
+    html, body{background:none !important; margin:0 !important;}
     /* visibility:hidden (above) only stops painting — hidden elements keep
        their full layout height, so the tall sidebar/form-panel/topbar were
        still reserving vertical space in the print document. That pushed the
@@ -448,7 +456,34 @@
        paper size, A4 or Letter. @page below still requests A4 for browsers/
        drivers that honor it, but content no longer depends on that request
        succeeding to stay on a single page. */
-    .paper{position:static; box-shadow:none; margin:0 auto; width:210mm; height:auto; overflow:visible; transform:none !important;}
+    /* Leave a small safety margin around the page instead of true edge-to-
+       edge bleed. Most home/office printers have a non-printable strip
+       (commonly 3-5mm) near the paper edges — a color that's designed to
+       reach exactly the page edge in the PDF gets unevenly clipped once
+       actually printed on paper. Insetting the page by 5mm keeps colored
+       sidebars (e.g. "modern") safely inside what any standard printer can
+       actually reproduce, matching professional print practice.
+       Note: this inset is done with PADDING + box-sizing:border-box, not
+       an outer margin. A margin on .paper measurably triggered a genuine
+       (if completely blank) phantom second PDF page in testing — box-model
+       margins interacting with print pagination is a known rough edge in
+       Chromium's print-to-PDF path. Padding avoids that failure mode while
+       producing the same visual inset. */
+    .paper{
+      position:static; box-shadow:none; transform:none !important;
+      margin:0 auto; width:210mm; height:auto; min-height:0; overflow:visible;
+      padding:5mm; box-sizing:border-box;
+    }
+    /* Every template's root wrapper (the direct child .paper receives as
+       innerHTML) carries its own hardcoded min-height:297mm — independent
+       of .paper's own sizing — so the design always fills a full A4 page
+       even when the actual text is much shorter. Left alone, that leaves
+       zero slack once the 5mm padding above is added on top, so cap it to
+       what's actually left within the page after that padding (with a
+       couple mm of rounding buffer, since browsers round the mm→px
+       conversion and can tip a mathematically-exact value a hair over).
+       !important is required to beat the inline style. */
+    .paper > div{ min-height:284mm !important; }
     /* Browsers strip background colors/images when printing unless told
        otherwise (Chrome's print dialog even ships with "Background graphics"
        unchecked by default) — this is why colored sidebars (e.g. the
